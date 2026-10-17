@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Интерактивная схема изъятия недвижимости в рамках КРТ в Москве: участники, сроки, сверка регламента с ЗК и ГрК, калькулятор сроков.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>Маршрут изъятия КРТ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap">
+<style>
+/* Layout: синяя лента-шапка и синий hero со шкалой-линейкой; ниже на светлом поле три раздела с индексами 01–03: схема-метро, сверка с законом, калькулятор */
+:root{
+  --bg:#F2F2F2; --surface:#FFFFFF; --fg:#111111; --muted:#5F6470; --grey:#909090; --line:#D9DCE3;
+  --chip:#E5EDFB; --hover:#F5F7FC; --sel:#E5EDFB; --head:#014EE2; --cta:#0B1750;
+  --blue:#014EE2; --blue-logo:#0057FF; --blue-700:#0039A7; --navy:#0B1750;
+  --l1:#0B1750; --l2:#5489E7; --l3:#014EE2; --transfer:#909090;
+  --warn:#C42B22; --warn-bg:#FCEDEC; --ok:#1E7A4C;
+  --f:"Montserrat",Arial,"Helvetica Neue",sans-serif;
+  --track:96px; --laneA:30px; --laneB:66px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#070E33; --surface:#0E1A55; --fg:#EEF2FB; --muted:#A3ACC6; --grey:#8B93AD; --line:#22306E;
+  --chip:#132267; --hover:#12205F; --sel:#16286E; --head:#7FA6FF; --cta:#014EE2;
+  --l1:#DCE6FF; --l2:#7FA6FF; --l3:#3D7BFF; --transfer:#5D6890;
+  --warn:#FF8A80; --warn-bg:#3A1630; --ok:#5FD39A; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#070E33; --surface:#0E1A55; --fg:#EEF2FB; --muted:#A3ACC6; --grey:#8B93AD; --line:#22306E;
+  --chip:#132267; --hover:#12205F; --sel:#16286E; --head:#7FA6FF; --cta:#014EE2;
+  --l1:#DCE6FF; --l2:#7FA6FF; --l3:#3D7BFF; --transfer:#5D6890;
+  --warn:#FF8A80; --warn-bg:#3A1630; --ok:#5FD39A; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:500 15px/1.55 var(--f);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-weight:900;line-height:1.02;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--blue-logo);outline-offset:2px}
+body.sheet-open main{padding-bottom:58vh}
+
+/* Шапка */
+.top{background:var(--blue-700);color:#fff}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px 28px;padding-block:16px;flex-wrap:wrap}
+.brand{display:block;line-height:0}
+.brand svg{height:40px;width:auto}
+.brand-txt{font:900 16px/1 var(--f);letter-spacing:.02em;text-transform:uppercase}
+.top nav{display:flex;gap:8px 26px;flex-wrap:wrap;font:700 13px/1 var(--f);text-transform:uppercase;letter-spacing:.02em}
+.top nav a{text-decoration:none;opacity:.9;display:inline-block;padding-block:12px}
+.top nav{margin-block:-12px}
+.top nav a:hover{opacity:1;text-decoration:underline}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,#014EE2 0%,#2A63C9 100%);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{padding-block:44px 52px;display:grid;gap:22px;position:relative}
+.ruler{height:22px;width:300px;max-width:100%;opacity:.75;background:
+  repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 100%) 0 100%/20px 12px repeat-x,
+  repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 100%) 0 100%/100px 22px repeat-x}
+.eyebrow{font:700 13px/1.3 var(--f);text-transform:uppercase;letter-spacing:.06em;opacity:.85}
+.hero h1{font-size:clamp(34px,5.6vw,62px);max-width:15ch}
+.band{display:flex;align-items:center;gap:20px;background:linear-gradient(90deg,#0057FF 40%,rgba(0,87,255,0) 100%);padding:20px 22px;border-radius:2px;max-width:860px}
+.band p{font:400 clamp(16px,1.9vw,21px)/1.4 var(--f);max-width:60ch}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;font:600 13.5px/1.3 var(--f)}
+.legend span{display:inline-flex;align-items:center;gap:9px}
+.legend i{width:30px;height:6px;border-radius:3px;background:var(--c)}
+.legend .tr i{background:none;border-top:4px dotted rgba(255,255,255,.75);height:0;border-radius:0}
+.wm{position:absolute;right:-10px;bottom:-34px;font:900 clamp(110px,20vw,260px)/1 var(--f);letter-spacing:-.05em;color:rgba(255,255,255,.08);pointer-events:none;user-select:none}
+
+/* Ключевые сроки */
+.deadlines{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:-26px;position:relative}
+.dl{background:var(--surface);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0;box-shadow:0 8px 24px rgba(11,23,80,.10)}
+.dl b{font:900 34px/1 var(--f);color:var(--head);font-variant-numeric:tabular-nums}
+.dl b small{font:700 13px/1 var(--f);color:var(--muted);margin-left:6px;text-transform:uppercase;letter-spacing:.03em}
+.dl span{font-size:13px;line-height:1.4;color:var(--muted)}
+@media (max-width:760px){.deadlines{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){
+  .deadlines{grid-template-columns:minmax(0,1fr);gap:8px}
+  .dl{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}
+  .dl b{flex:none;width:104px;font-size:30px}
+  .dl b small{display:block;margin:4px 0 0}
+}
+
+/* Разделы */
+section{padding-block:56px}
+section+section{border-top:1px solid var(--line)}
+.sh{display:grid;gap:10px;margin-bottom:26px}
+.sh .idx{font:700 14px/1 var(--f);color:var(--head)}
+.sh h2{font-size:clamp(26px,3.4vw,34px);color:var(--head)}
+.sh h2 span{display:block;color:var(--grey)}
+.sh p{color:var(--muted);max-width:66ch}
+
+/* Управление */
+.controls{display:flex;flex-wrap:wrap;gap:16px 36px;align-items:flex-start;margin-bottom:18px}
+.ctl-label{font:700 11px/1.3 var(--f);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{font:600 13px/1 var(--f);min-height:40px;padding:9px 13px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--blue)}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.play{font:700 13px/1 var(--f);text-transform:uppercase;letter-spacing:.03em;min-height:40px;padding:11px 18px;border-radius:10px;border:0;background:var(--cta);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:9px}
+.play:hover{filter:brightness(1.15)}
+.play svg{width:11px;height:11px;fill:currentColor}
+.role-note{font-size:13px;color:var(--muted);min-height:1.5em;margin-top:8px}
+
+/* Схема */
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:24px;align-items:start}
+.map-wrap{position:relative;background:var(--surface);border-radius:8px;padding:10px 10px 14px 4px}
+.layer{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.rails{z-index:0}
+.train-layer{z-index:2}
+.rails path{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s}
+.rails path.t{stroke:var(--transfer);stroke-width:4;stroke-dasharray:.1 9}
+.rails.dim path{opacity:.25}
+ol.map{list-style:none;margin:0;padding:0;position:relative;z-index:1}
+.phase-h{display:grid;grid-template-columns:var(--track) minmax(0,1fr);padding:16px 0 4px}
+.phase-h span{grid-column:2;padding-left:12px;font:700 11.5px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.st{transition:opacity .25s}
+.st.dim{opacity:.28}
+.st-btn{appearance:none;background:none;border:0;margin:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:var(--track) minmax(0,1fr);width:100%;min-height:56px}
+.st-btn:focus-visible{outline:none}
+.st-btn:focus-visible .st-body{outline:3px solid var(--blue-logo);outline-offset:-3px}
+.track{position:relative}
+.dot{position:absolute;top:50%;left:calc(var(--lane) - 9px);width:18px;height:18px;margin-top:-9px;border-radius:50%;background:var(--surface);border:4px solid var(--c);transition:transform .2s,background .2s}
+.st.end .dot{width:24px;height:24px;margin-top:-12px;left:calc(var(--lane) - 12px);border-width:5px}
+.st.sel .dot{background:var(--c);transform:scale(1.2)}
+.st-body{display:flex;flex-direction:column;gap:5px;padding:9px 12px;margin:2px 0;border-radius:8px;min-width:0;transition:background .15s}
+.st-btn:hover .st-body{background:var(--hover)}
+.st.sel .st-body{background:var(--sel)}
+.st-top{display:flex;gap:10px;align-items:baseline}
+.st-num{flex:none;width:42px;font:700 13px/1.3 var(--f);color:var(--c);font-variant-numeric:tabular-nums}
+.st-title{font-weight:700;font-size:15px;line-height:1.3;text-wrap:balance}
+.st-meta{display:flex;flex-wrap:wrap;gap:4px 5px;padding-left:52px}
+.tag{font:600 11px/1.7 var(--f);padding:0 7px;border-radius:5px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.tag.term{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--fg)}
+.tag.flag{background:var(--warn-bg);color:var(--warn)}
+@media (max-width:520px){
+  :root{--track:62px;--laneA:22px;--laneB:46px}
+  .map-wrap{padding-right:6px}
+  .st-body{padding:8px 10px}
+  .st-top{flex-direction:column;gap:1px}
+  .st-num{width:auto;font-size:12px}
+  .st-meta{padding-left:0}
+}
+
+/* Карточка станции */
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border-radius:8px;padding:22px 22px 18px;max-height:calc(100vh - 32px);overflow:auto;border-top:4px solid var(--c)}
+.d-line{display:inline-flex;align-items:center;gap:9px;font:700 11.5px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.d-line i{width:22px;height:5px;border-radius:3px;background:var(--c)}
+.d-num{font:900 48px/1 var(--f);color:var(--c);margin-top:14px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.detail h2{font-weight:900;font-size:22px;line-height:1.15;margin:10px 0 12px;color:var(--fg)}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:16px 0 0;font-size:13.5px}
+.facts dt{color:var(--muted);font-weight:600}
+.facts dd{margin:0}
+.facts dd span{display:block}
+.note{border-radius:8px;padding:12px 14px;font-size:13.5px;margin-top:12px}
+.note b{display:block;font:700 11px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.note.owner{background:var(--chip)}
+.note.owner b{color:var(--head)}
+.note.flag{background:var(--warn-bg)}
+.note.flag b{color:var(--warn)}
+.note.flag dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0}
+.note.flag dt{font-weight:700}
+.note.flag dd{margin:0}
+.d-nav{display:flex;justify-content:space-between;gap:8px;margin-top:18px}
+.ghost{font:600 13px/1 var(--f);min-height:40px;padding:10px 13px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.ghost:hover{border-color:var(--blue)}
+.ghost:disabled{opacity:.4;cursor:default}
+.sheet-close{display:none;float:right}
+@media (max-width:899px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .detail{position:fixed;z-index:30;left:0;right:0;bottom:0;top:auto;max-height:55vh;border-radius:14px 14px 0 0;
+    padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -12px 40px rgba(11,23,80,.22);transform:translateY(105%);transition:transform .3s ease;visibility:hidden}
+  .detail.open{transform:none;visibility:visible}
+  .sheet-close{display:inline-block}
+  .d-num{font-size:38px;margin-top:4px}
+}
+
+/* Сверка с законом */
+.diff{display:grid;gap:10px}
+.diff-row{appearance:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border-radius:8px;padding:16px 18px;display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) minmax(0,170px);gap:8px 20px;align-items:start;transition:box-shadow .15s}
+.diff-row:hover{box-shadow:inset 0 0 0 2px var(--blue)}
+.diff-head{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) minmax(0,170px);gap:20px;padding:0 18px;font:700 11px/1.3 var(--f);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.diff-n{font:900 22px/1 var(--f);color:var(--l3)}
+.diff-reg{color:var(--muted)}
+.diff-law b{color:var(--fg)}
+.diff-ref{font:600 12.5px/1.4 var(--f);color:var(--head)}
+.diff-k{display:none;font:700 10.5px/1.3 var(--f);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:2px}
+.ok-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ok-list span{font:600 12.5px/1.4 var(--f);padding:6px 10px;border-radius:8px;background:var(--surface);color:var(--fg)}
+.ok-list span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:8px;vertical-align:1px}
+@media (max-width:760px){
+  .diff-head{display:none}
+  .diff-row{grid-template-columns:44px minmax(0,1fr)}
+  .diff-row > div:not(.diff-n){grid-column:2}
+  .diff-k{display:block}
+}
+
+/* Калькулятор */
+.calc-grid{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px;align-items:start}
+.inputs{display:flex;flex-direction:column;gap:14px;background:var(--surface);border-radius:8px;padding:18px}
+.field label{display:block;font-weight:700;font-size:13.5px;margin-bottom:6px}
+.field input{font:500 15px/1.3 var(--f);width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.field small{display:block;font-size:12.5px;line-height:1.4;color:var(--muted);margin-top:6px}
+.sample{font:700 11px/1.3 var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--head);background:var(--chip);border-radius:5px;padding:4px 8px;align-self:flex-start}
+.out{display:flex;flex-direction:column;gap:16px;min-width:0}
+.status{background:var(--surface);border-radius:8px;padding:18px 20px;border-left:6px solid var(--c,var(--grey))}
+.status .k{font:700 11px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.status .v{font-size:18px;font-weight:700;line-height:1.35;margin-top:6px;text-wrap:balance}
+.status .v small{display:block;font-size:14px;font-weight:500;color:var(--muted);margin-top:6px}
+.status .err{color:var(--warn)}
+.tl-wrap{position:relative;margin:30px 0 4px}
+.tl{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px}
+.tl i{display:block;min-width:2px}
+.mk{position:absolute;top:-8px;bottom:-8px;width:2px;margin-left:-1px}
+.mk span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font:700 11px/1 var(--f);white-space:nowrap;padding-bottom:3px}
+.mk.today{background:var(--fg)}
+.mk.law{border-left:2px dashed var(--warn);width:0;top:4px;bottom:-14px}
+.mk.law span{bottom:auto;top:100%;color:var(--warn);padding:3px 0 0}
+.tl-legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--muted);margin-top:34px}
+.tl-legend span{display:inline-flex;align-items:center;gap:6px}
+.tl-legend i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+ol.ms{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:8px;overflow:hidden}
+ol.ms li{display:grid;grid-template-columns:190px minmax(0,1fr);gap:4px 16px;padding:13px 18px;border-top:1px solid var(--line)}
+ol.ms li:first-child{border-top:0}
+ol.ms li.past .ms-date,ol.ms li.past .ms-t b{color:var(--muted)}
+ol.ms li.lawrow{background:var(--warn-bg)}
+.ms-date{font-weight:700;font-variant-numeric:tabular-nums}
+.ms-date small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.ms-t b{font-weight:700}
+.ms-t small{display:block;color:var(--muted);font-size:12.5px;line-height:1.45;margin-top:2px}
+@media (max-width:760px){
+  .calc-grid{grid-template-columns:minmax(0,1fr)}
+  ol.ms li{grid-template-columns:minmax(0,1fr)}
+}
+
+/* Подвал */
+.foot{background:#0B1750;color:#E5EDFB}
+.foot .wrap{padding-block:36px 44px;display:grid;gap:18px;font-size:13px}
+.foot p{max-width:80ch;opacity:.9}
+.foot h3{font-size:16px;color:#fff}
+.src{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:6px 24px;margin:0;padding:0;list-style:none}
+.src a{color:#fff;text-underline-offset:3px;display:inline-block;padding-block:6px}
+.foot details summary{cursor:pointer;font-weight:700;color:#fff}
+.gloss{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:10px 0 0}
+.gloss dt{font-weight:700;color:#fff}
+.gloss dd{margin:0}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Ресурс"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 983 296" role="img" aria-label="Ресурс — логотип"><path fill="#0057FF" d="M17.12 295.75C13.84 294.89 12.97 294.56 9.92 292.98C8.85 292.42 4.52 288.23 3.98 287.22C3.78 286.86 3.32 285.99 2.94 285.29C2.56 284.59 1.94 283.14 1.56 282.07L0.88 280.12L0.88 148.38L0.88 16.62L1.45 14.88C3.32 9.23 6.44 5.47 11.59 2.69C12.29 2.31 12.98 2.00 13.12 2.00C13.26 2.00 13.71 1.82 14.12 1.60C14.54 1.38 15.49 1.08 16.25 0.93C17.22 0.74 55.51 0.63 147.50 0.58C264.20 0.50 277.63 0.53 279.85 0.88C281.21 1.10 282.56 1.44 282.84 1.64C283.13 1.84 283.59 2.00 283.88 2.00C284.17 2.00 284.51 2.11 284.64 2.24C284.78 2.38 285.30 2.69 285.80 2.93C286.29 3.18 287.56 4.05 288.61 4.87C291.92 7.47 294.10 10.74 295.53 15.25L296.12 17.12L296.12 148.25L296.12 279.38L295.39 281.62C294.56 284.20 294.01 285.36 292.78 287.12C291.19 289.42 290.39 290.30 288.72 291.59C286.30 293.46 285.49 293.88 281.38 295.40C280.17 295.85 275.87 295.87 149.00 295.91C76.88 295.93 17.54 295.86 17.12 295.75Z"/><path fill="#fff" d="M81.36 224.89L80.75 224.27L80.75 207.03C80.75 197.54 80.85 189.52 80.97 189.20C81.09 188.88 83.93 185.99 87.28 182.78C93.78 176.56 99.51 171.02 116.62 154.40C126.31 144.98 129.96 141.43 139.59 132.00C141.93 129.71 142.57 129.21 142.76 129.50C142.90 129.73 142.95 132.87 142.88 137.38C142.82 141.50 142.69 162.70 142.60 184.49L142.43 224.10L141.74 224.80L141.04 225.50L111.51 225.50L81.98 225.50L81.36 224.89ZM161.82 179.55C161.66 179.44 161.35 178.94 161.13 178.44C160.79 177.62 160.75 172.95 160.75 137.45C160.75 98.57 160.73 97.35 160.27 96.60C159.96 96.09 159.53 95.77 158.99 95.66C158.55 95.57 141.06 95.50 120.13 95.50L82.07 95.50L81.40 94.98L80.74 94.45L80.81 83.11C80.86 74.22 80.94 71.70 81.20 71.45C81.69 70.96 165.63 70.98 168.00 71.46C168.89 71.65 170.64 71.94 171.88 72.12C174.35 72.47 177.14 73.11 178.50 73.64C178.98 73.82 179.77 74.09 180.25 74.23C181.77 74.66 183.71 75.40 184.05 75.68C184.23 75.82 184.73 76.02 185.17 76.11C185.61 76.21 186.09 76.43 186.24 76.62C186.40 76.80 186.82 77.03 187.18 77.12C187.54 77.21 188.11 77.50 188.45 77.77C188.79 78.03 189.16 78.25 189.26 78.25C189.45 78.25 191.41 79.55 194.58 81.79C199.10 84.98 206.66 93.92 208.84 98.66C209.04 99.09 209.31 99.51 209.46 99.60C209.60 99.68 209.78 100.08 209.87 100.49C209.96 100.89 210.19 101.34 210.38 101.50C210.56 101.66 210.79 102.11 210.88 102.50C210.96 102.89 211.19 103.35 211.39 103.51C211.59 103.68 211.75 103.99 211.75 104.20C211.75 104.42 211.96 105.05 212.21 105.61C212.95 107.25 213.71 109.30 213.98 110.38C214.12 110.93 214.39 111.99 214.59 112.75C215.99 118.19 216.43 123.31 216.00 129.07C215.84 131.16 215.56 133.44 215.37 134.12C215.19 134.81 214.96 135.99 214.86 136.75C214.77 137.51 214.55 138.41 214.38 138.75C214.20 139.09 213.98 139.77 213.89 140.25C213.69 141.22 212.94 143.33 212.22 144.90C211.96 145.47 211.75 146.10 211.75 146.31C211.75 146.52 211.59 146.82 211.39 146.99C211.19 147.15 210.96 147.64 210.86 148.08C210.77 148.52 210.59 149.01 210.46 149.17C210.33 149.33 209.86 150.17 209.41 151.04C207.65 154.47 206.13 156.77 203.21 160.40C201.07 163.07 197.00 167.17 195.78 167.88C195.55 168.01 194.51 168.77 193.47 169.56C192.43 170.35 191.50 171.00 191.41 171.00C191.32 171.00 190.69 171.39 190.01 171.87C189.33 172.34 188.50 172.80 188.15 172.89C187.80 172.98 187.40 173.20 187.24 173.38C187.09 173.57 186.64 173.79 186.25 173.88C185.86 173.96 185.41 174.19 185.25 174.38C185.09 174.56 184.65 174.79 184.26 174.87C183.87 174.96 183.12 175.25 182.60 175.51C182.07 175.78 181.50 176.00 181.33 176.00C181.16 176.00 180.65 176.16 180.20 176.35C175.88 178.22 163.20 180.42 161.82 179.55ZM80.86 162.68C80.80 162.51 80.77 151.66 80.81 138.57C80.86 119.45 80.94 114.71 81.20 114.45C81.46 114.19 86.31 114.10 105.57 114.00C118.80 113.93 129.73 113.96 129.87 114.07C130.10 114.25 81.60 163.00 81.18 163.00C81.07 163.00 80.93 162.86 80.86 162.68Z"/><path fill="#fff" d="M860.25 227.14C858.12 226.78 856.16 225.89 855.73 225.08C855.48 224.62 855.57 224.30 856.36 222.89C857.23 221.33 857.77 220.92 858.14 221.53C858.23 221.68 858.89 222.07 859.59 222.40C861.09 223.09 863.15 223.20 864.24 222.63C865.17 222.15 866.47 220.51 867.38 218.67C868.07 217.27 868.08 217.19 867.69 216.42C867.47 215.98 866.70 214.27 865.99 212.62C865.27 210.98 864.55 209.34 864.37 209.00C864.20 208.66 863.81 207.76 863.50 207.00C862.97 205.70 862.82 205.37 862.27 204.31C862.15 204.07 861.52 202.64 860.88 201.12C859.39 197.62 858.71 196.09 857.39 193.26C856.28 190.90 856.50 190.67 859.74 190.80L861.59 190.88L862.33 192.38C863.12 193.99 863.12 194.00 864.89 198.12C865.54 199.64 866.35 201.49 866.68 202.25C867.01 203.01 867.46 204.02 867.67 204.50C867.88 204.98 868.25 205.82 868.50 206.38C869.06 207.63 869.92 209.73 870.10 210.33C870.41 211.29 871.10 210.61 872.09 208.37C875.10 201.56 876.33 198.71 877.41 196.03C877.88 194.88 878.43 193.71 878.63 193.42C878.83 193.13 879.00 192.68 879.00 192.43C879.00 192.18 879.28 191.70 879.61 191.36C880.15 190.83 880.45 190.75 881.94 190.75C882.97 190.75 883.84 190.88 884.11 191.08C884.54 191.40 884.53 191.50 883.77 193.15C882.30 196.35 881.26 198.70 880.51 200.50C880.20 201.26 879.84 202.07 879.72 202.31C879.60 202.55 879.40 202.95 879.28 203.19C879.16 203.43 878.80 204.24 878.48 205.00C878.17 205.76 877.48 207.31 876.96 208.44C876.43 209.58 876.00 210.58 876.00 210.67C876.00 210.75 875.71 211.46 875.35 212.23C874.99 213.00 874.52 214.02 874.31 214.50C872.10 219.57 871.01 221.87 870.21 223.12C869.52 224.20 867.78 226.00 867.42 226.00C867.30 226.00 866.90 226.21 866.54 226.46C865.94 226.88 865.21 227.06 862.88 227.36C862.46 227.41 861.28 227.31 860.25 227.14ZM828.05 226.70C827.82 226.47 827.75 222.17 827.75 208.88C827.75 195.58 827.82 191.28 828.05 191.05C828.42 190.68 831.35 190.65 832.02 191.01C832.38 191.21 832.50 191.54 832.50 192.38C832.50 193.74 832.89 193.83 834.23 192.81C836.42 191.13 838.47 190.50 841.70 190.50C844.29 190.50 846.64 190.98 848.44 191.87C849.83 192.56 853.00 195.34 853.00 195.87C853.00 196.05 853.15 196.31 853.33 196.47C853.52 196.62 854.00 197.56 854.40 198.56C855.08 200.27 855.12 200.58 855.12 204.00C855.12 207.42 855.08 207.73 854.41 209.36C853.43 211.74 852.79 212.68 851.14 214.19C848.83 216.31 846.36 217.32 842.73 217.66C840.71 217.85 837.33 217.22 836.21 216.46C835.85 216.21 835.44 216.00 835.32 216.00C835.19 216.00 834.82 215.71 834.49 215.36C834.15 215.00 833.68 214.76 833.38 214.80C832.89 214.87 832.87 215.05 832.83 220.58C832.81 223.71 832.73 226.44 832.65 226.64C832.48 227.11 828.51 227.16 828.05 226.70ZM590.12 223.77L588.38 223.62L588.25 220.88C588.18 219.36 588.03 217.98 587.92 217.81C587.77 217.57 585.18 217.50 576.41 217.50C567.95 217.50 565.02 217.42 564.80 217.20C564.57 216.97 564.50 213.72 564.50 204.08C564.50 189.40 564.25 190.75 567.00 190.75C569.73 190.75 569.50 189.70 569.50 201.98C569.50 211.52 569.54 212.71 569.90 212.85C570.59 213.11 583.46 213.02 583.63 212.75C583.71 212.61 583.77 207.76 583.76 201.97C583.74 194.37 583.82 191.35 584.02 191.10C584.32 190.74 587.55 190.59 588.35 190.90C588.71 191.04 588.75 192.23 588.75 201.75C588.75 210.18 588.82 212.50 589.07 212.71C589.25 212.85 590.18 213.01 591.14 213.05L592.88 213.12L592.94 218.25C593.00 222.85 592.97 223.41 592.58 223.69C592.35 223.86 592.09 223.98 592.01 223.96C591.94 223.93 591.09 223.85 590.12 223.77ZM481.50 217.26C480.47 217.01 479.29 216.63 478.88 216.41C478.46 216.19 478.04 216.00 477.93 216.00C477.83 216.00 477.02 215.44 476.15 214.75C474.52 213.47 473.62 212.44 472.96 211.12C472.76 210.71 472.47 210.15 472.33 209.88C471.57 208.41 471.25 206.69 471.25 204.00C471.25 201.31 471.57 199.59 472.33 198.12C472.47 197.85 472.76 197.29 472.97 196.88C474.34 194.11 477.37 191.90 481.20 190.86C482.78 190.43 487.01 190.39 488.68 190.78C489.78 191.04 491.74 191.79 492.40 192.20C494.00 193.20 494.85 193.92 495.78 195.04C498.11 197.87 498.87 200.07 498.87 204.00C498.87 207.97 498.00 210.41 495.60 213.19C493.76 215.32 491.74 216.50 488.64 217.23C486.03 217.85 484.03 217.86 481.50 217.26ZM539.61 217.26C536.91 216.58 534.97 215.13 533.85 212.95C532.98 211.23 532.99 208.25 533.88 206.48C534.65 204.97 536.27 203.35 537.34 203.02C537.77 202.89 538.58 202.61 539.12 202.40C539.90 202.11 541.33 202.02 545.50 202.01C548.46 202.00 551.03 201.89 551.22 201.77C551.70 201.47 551.15 198.54 550.40 197.43C549.46 196.02 547.78 195.09 545.84 194.90C543.80 194.71 540.92 195.04 539.88 195.60C539.46 195.82 538.97 196.00 538.79 196.00C538.60 196.00 538.11 196.28 537.70 196.62C537.30 196.97 536.71 197.25 536.39 197.25C535.80 197.25 535.00 196.55 535.00 196.03C535.00 195.87 534.76 195.40 534.46 195.00C533.95 194.31 533.95 194.24 534.34 193.64C534.57 193.29 534.91 193.00 535.09 193.00C535.27 193.00 535.63 192.77 535.88 192.50C536.12 192.23 536.51 192.00 536.73 192.00C536.95 192.00 537.46 191.82 537.88 191.60C539.82 190.58 546.05 190.17 549.05 190.87C551.10 191.35 552.36 192.01 553.68 193.31C556.21 195.79 556.50 197.34 556.50 208.39C556.50 214.68 556.42 216.98 556.20 217.20C556.02 217.38 555.16 217.50 554.08 217.50C552.49 217.50 552.23 217.43 551.99 216.97C551.83 216.69 551.76 216.25 551.82 216.00C552.01 215.27 551.60 214.82 551.07 215.18C547.50 217.59 543.67 218.29 539.61 217.26ZM642.38 217.59C637.83 216.69 636.40 215.99 633.94 213.47C632.88 212.38 632.00 211.30 632.00 211.09C632.00 210.88 631.80 210.40 631.55 210.04C630.91 209.11 630.24 205.95 630.25 203.89C630.25 199.54 632.55 195.02 635.91 192.76C636.52 192.34 637.14 192.00 637.27 192.00C637.41 192.00 637.79 191.82 638.12 191.61C640.47 190.07 647.65 190.17 650.85 191.80C652.72 192.75 654.73 194.54 655.83 196.23C657.41 198.67 658.01 200.80 658.01 204.00C658.01 208.93 656.13 212.69 652.33 215.38C649.99 217.03 645.07 218.13 642.38 217.59ZM737.38 217.59C734.92 217.11 734.03 216.85 733.46 216.46C733.10 216.21 732.70 216.00 732.58 216.00C732.45 216.00 731.89 215.52 731.32 214.94C729.39 212.95 728.75 209.91 729.69 207.16C730.17 205.73 732.62 203.00 733.42 203.00C733.67 203.00 734.21 202.80 734.62 202.57C735.26 202.20 736.22 202.13 740.88 202.06C743.90 202.02 746.63 201.94 746.94 201.87C747.38 201.77 747.50 201.57 747.50 200.93C747.49 198.64 746.32 196.61 744.41 195.59C743.23 194.96 742.90 194.90 740.38 194.91C738.09 194.92 737.43 195.01 736.45 195.46C735.81 195.76 735.15 196.00 735.00 196.00C734.84 196.00 734.21 196.35 733.59 196.77C732.51 197.52 732.45 197.53 731.98 197.11C731.36 196.54 730.25 194.56 730.25 194.01C730.25 193.63 732.45 192.00 732.95 192.00C733.05 192.00 733.46 191.82 733.88 191.60C735.55 190.71 741.71 190.23 744.62 190.76C748.70 191.50 751.32 193.89 752.15 197.62C752.60 199.67 752.65 216.75 752.20 217.20C752.02 217.38 751.16 217.50 750.08 217.50C748.50 217.50 748.23 217.43 747.99 216.98C747.84 216.69 747.77 216.30 747.85 216.11C748.01 215.69 747.79 215.00 747.49 215.00C747.38 215.00 746.63 215.43 745.83 215.96C743.75 217.32 739.83 218.08 737.38 217.59ZM959.79 217.26C958.78 217.00 957.76 216.61 957.52 216.39C957.28 216.18 956.96 216.00 956.81 216.00C956.66 216.00 955.99 215.38 955.31 214.62C954.41 213.62 954.01 212.90 953.79 211.98C952.79 207.63 954.42 204.40 958.50 202.65C959.48 202.23 960.38 202.15 965.50 202.07C972.67 201.95 972.47 202.07 971.31 198.75C970.54 196.54 968.63 195.15 966.00 194.89C964.15 194.71 961.16 195.07 960.09 195.60C959.70 195.80 959.09 196.08 958.75 196.23C958.41 196.39 957.75 196.75 957.28 197.05L956.44 197.58L955.96 196.98C955.15 195.95 954.47 194.49 954.55 193.94C954.62 193.47 955.95 192.48 957.00 192.11C957.21 192.03 957.71 191.80 958.12 191.58C959.82 190.70 965.92 190.23 968.88 190.76C972.51 191.40 975.20 193.67 976.23 196.98C976.71 198.51 976.93 216.61 976.48 217.15C976.28 217.39 975.60 217.50 974.25 217.50C972.11 217.50 972.00 217.42 972.00 215.85C972.00 215.16 971.90 215.00 971.49 215.00C971.21 215.00 970.92 215.16 970.84 215.36C970.65 215.88 969.09 216.75 967.62 217.16C965.50 217.75 961.89 217.80 959.79 217.26ZM372.55 217.20C372.32 216.97 372.25 213.69 372.25 203.98C372.25 192.42 372.29 191.04 372.65 190.90C373.45 190.59 376.68 190.74 376.98 191.10C377.19 191.35 377.26 193.86 377.24 200.04C377.21 207.30 377.27 208.64 377.57 208.70C377.77 208.74 379.25 207.19 381.02 205.07C382.72 203.04 384.79 200.58 385.62 199.61C386.45 198.64 388.19 196.56 389.50 194.99C393.24 190.50 392.90 190.75 395.09 190.75C396.12 190.75 397.14 190.82 397.35 190.90C397.71 191.04 397.75 192.42 397.75 203.98C397.75 213.69 397.68 216.97 397.45 217.20C397.27 217.38 396.39 217.50 395.21 217.50C393.51 217.50 393.23 217.44 392.99 216.99C392.81 216.64 392.74 213.68 392.77 207.81C392.80 201.98 392.73 199.12 392.55 199.06C392.30 198.98 390.68 200.80 385.50 207.01C384.19 208.57 382.45 210.65 381.62 211.62C380.79 212.58 379.45 214.20 378.64 215.20C377.84 216.20 376.97 217.13 376.73 217.26C376.08 217.61 372.91 217.56 372.55 217.20ZM406.80 217.20C406.57 216.97 406.50 213.72 406.50 204.08C406.50 189.40 406.25 190.75 409.00 190.75C411.62 190.75 411.50 190.47 411.50 196.48C411.50 201.01 411.55 201.72 411.90 201.85C412.11 201.93 415.30 202.00 418.97 202.00C423.83 202.00 425.73 201.92 425.95 201.70C426.16 201.49 426.25 199.92 426.25 196.23C426.25 191.74 426.30 191.03 426.65 190.90C427.37 190.63 430.64 190.74 430.95 191.05C431.35 191.45 431.38 216.28 430.99 217.02C430.77 217.43 430.45 217.50 428.77 217.50C427.48 217.50 426.72 217.39 426.55 217.18C426.38 216.98 426.25 214.86 426.20 211.70C426.16 208.86 426.05 206.47 425.96 206.38C425.67 206.09 412.19 206.24 411.83 206.54C411.58 206.75 411.50 207.98 411.50 211.86C411.50 215.45 411.41 216.99 411.20 217.20C411.02 217.38 410.14 217.50 409.00 217.50C407.86 217.50 406.98 217.38 406.80 217.20ZM440.15 217.10C440.07 216.89 440.00 211.00 440.00 204.03C440.00 194.50 440.07 191.28 440.30 191.05C440.73 190.62 444.36 190.65 444.71 191.08C444.89 191.29 445.01 193.30 445.06 196.64L445.12 201.88L452.50 201.88L459.88 201.88L459.94 196.64C459.99 193.30 460.11 191.29 460.29 191.08C460.64 190.65 464.27 190.62 464.70 191.05C464.93 191.28 465.00 194.50 465.00 204.03C465.00 211.00 464.93 216.89 464.85 217.10C464.63 217.69 460.37 217.69 460.15 217.10C460.07 216.89 460.00 214.42 460.00 211.62C460.00 208.55 459.90 206.47 459.75 206.38C459.62 206.29 456.35 206.23 452.50 206.23C448.65 206.23 445.38 206.29 445.25 206.38C445.10 206.47 445.00 208.55 445.00 211.62C445.00 214.42 444.93 216.89 444.85 217.10C444.73 217.42 444.27 217.50 442.50 217.50C440.73 217.50 440.27 217.42 440.15 217.10ZM505.55 217.20C505.32 216.97 505.25 213.69 505.25 203.95L505.25 191.01L505.84 190.86C506.17 190.78 509.91 190.75 514.16 190.79C521.69 190.88 521.91 190.89 523.25 191.48C525.36 192.41 526.46 193.39 527.14 194.94C527.77 196.35 528.00 199.07 527.52 199.36C527.39 199.44 527.22 199.83 527.13 200.23C527.04 200.65 526.44 201.46 525.73 202.12C525.06 202.75 524.50 203.38 524.50 203.51C524.50 203.64 524.87 203.90 525.31 204.09C527.26 204.93 528.50 207.14 528.50 209.78C528.50 211.97 528.03 213.38 526.88 214.63C525.45 216.19 523.68 216.89 520.38 217.23C516.56 217.61 505.94 217.59 505.55 217.20ZM598.80 217.20C598.57 216.97 598.50 213.72 598.50 204.08C598.50 189.40 598.25 190.75 601.00 190.75C603.71 190.75 603.50 189.97 603.50 200.01C603.50 207.83 603.54 208.75 603.90 208.75C604.12 208.75 604.56 208.44 604.88 208.06C607.42 205.04 610.51 201.37 612.50 198.99C613.81 197.42 615.90 194.96 617.15 193.51L619.42 190.88L621.48 190.80C622.79 190.76 623.68 190.84 623.90 191.02C624.19 191.26 624.25 193.40 624.25 203.92C624.25 212.14 624.16 216.70 623.99 217.02C623.76 217.44 623.45 217.50 621.49 217.50C620.26 217.50 619.23 217.47 619.20 217.44C619.17 217.40 619.08 213.27 619.01 208.25C618.91 201.86 618.79 199.12 618.60 199.12C618.45 199.12 617.18 200.53 615.77 202.25C613.32 205.25 611.20 207.80 605.94 214.08C604.60 215.67 603.28 217.10 603.02 217.24C602.34 217.60 599.17 217.57 598.80 217.20ZM664.55 217.20C664.32 216.97 664.25 213.69 664.25 203.98C664.25 192.42 664.29 191.04 664.65 190.90C665.46 190.59 668.68 190.74 668.98 191.10C669.19 191.35 669.26 192.95 669.23 196.46C669.21 199.21 669.27 201.58 669.36 201.73C669.61 202.13 683.55 202.10 683.95 201.70C684.16 201.49 684.25 199.92 684.25 196.23C684.25 191.74 684.30 191.03 684.65 190.90C685.37 190.63 688.64 190.74 688.95 191.05C689.35 191.45 689.38 216.28 688.99 217.02C688.77 217.43 688.45 217.50 686.77 217.50C685.48 217.50 684.72 217.39 684.55 217.18C684.38 216.98 684.25 214.86 684.20 211.70C684.16 208.86 684.05 206.47 683.96 206.38C683.77 206.19 669.78 206.20 669.47 206.40C669.35 206.47 669.25 208.78 669.25 211.53C669.25 214.50 669.14 216.73 668.99 217.02C668.77 217.43 668.45 217.50 666.79 217.50C665.61 217.50 664.73 217.38 664.55 217.20ZM698.15 217.10C698.07 216.89 698.00 211.00 698.00 204.03C698.00 194.50 698.07 191.28 698.30 191.05C698.73 190.62 702.36 190.65 702.71 191.08C702.89 191.29 703.01 193.30 703.06 196.64L703.12 201.88L710.23 201.94C714.38 201.98 717.44 201.91 717.57 201.78C717.70 201.65 717.79 199.33 717.77 196.50C717.74 192.96 717.81 191.35 718.02 191.10C718.32 190.74 721.54 190.59 722.35 190.90C722.71 191.04 722.75 192.42 722.75 203.98C722.75 213.69 722.68 216.97 722.45 217.20C722.04 217.61 718.35 217.60 718.08 217.19C717.97 217.02 717.82 214.51 717.75 211.62L717.62 206.38L710.75 206.25C706.97 206.18 703.68 206.21 703.44 206.32C703.04 206.50 703.00 207.00 703.00 211.61C703.00 214.42 702.93 216.89 702.85 217.10C702.73 217.42 702.27 217.50 700.50 217.50C698.73 217.50 698.27 217.42 698.15 217.10ZM758.75 216.92C758.75 216.59 759.04 215.95 759.39 215.48C762.50 211.30 764.25 208.82 764.25 208.57C764.25 208.40 763.88 208.08 763.44 207.87C761.47 206.94 760.72 206.32 759.81 204.89C758.11 202.22 758.13 197.59 759.84 195.00C761.13 193.05 763.81 191.42 766.41 190.99C768.63 190.63 781.33 190.68 781.70 191.05C781.93 191.28 782.00 194.50 782.00 204.03C782.00 211.00 781.93 216.89 781.85 217.10C781.73 217.41 781.31 217.50 779.90 217.50C778.83 217.50 777.98 217.38 777.80 217.20C777.59 216.99 777.50 215.72 777.50 213.10C777.50 209.87 777.44 209.28 777.10 209.15C776.89 209.07 775.09 209.00 773.12 209.00L769.53 209.00L768.83 210.01C768.44 210.56 767.67 211.63 767.12 212.37C766.58 213.11 765.86 214.16 765.54 214.70C765.21 215.24 764.57 216.09 764.11 216.59L763.28 217.50L761.01 217.50C758.81 217.50 758.75 217.49 758.75 216.92ZM804.01 217.02C803.62 216.28 803.65 191.45 804.05 191.05C804.44 190.66 822.29 190.62 823.02 191.01C823.42 191.23 823.50 191.54 823.50 192.98C823.50 194.31 823.41 194.73 823.10 194.85C822.89 194.93 819.70 195.00 816.03 195.00C811.17 195.00 809.27 195.08 809.05 195.30C808.83 195.52 808.75 198.30 808.75 206.25C808.75 214.20 808.67 216.98 808.45 217.20C808.27 217.38 807.39 217.50 806.21 217.50C804.55 217.50 804.23 217.43 804.01 217.02ZM889.15 217.10C889.07 216.89 889.00 211.00 889.00 204.03C889.00 194.50 889.07 191.28 889.30 191.05C889.52 190.83 892.53 190.75 901.28 190.75C907.70 190.75 913.14 190.82 913.35 190.90C913.71 191.04 913.75 192.42 913.75 203.98C913.75 213.69 913.68 216.97 913.45 217.20C913.27 217.38 912.39 217.50 911.21 217.50C909.53 217.50 909.23 217.43 909.00 217.00C908.82 216.67 908.74 212.98 908.76 205.97C908.77 200.17 908.68 195.33 908.56 195.21C908.44 195.09 905.14 195.02 901.23 195.06L894.12 195.12L893.99 206.25C893.92 212.37 893.84 217.40 893.81 217.44C893.78 217.47 892.75 217.50 891.53 217.50C889.73 217.50 889.27 217.42 889.15 217.10ZM922.55 217.20C922.32 216.97 922.25 213.69 922.25 203.98C922.25 192.42 922.29 191.04 922.65 190.90C922.86 190.82 928.30 190.75 934.72 190.75C943.47 190.75 946.48 190.83 946.70 191.05C946.93 191.28 947.00 194.50 947.00 204.03C947.00 211.00 946.93 216.89 946.85 217.10C946.73 217.42 946.27 217.50 944.47 217.50C943.25 217.50 942.22 217.47 942.19 217.44C942.16 217.40 942.08 212.37 942.01 206.25L941.88 195.12L934.77 195.06C930.86 195.02 927.56 195.09 927.44 195.21C927.32 195.33 927.23 200.17 927.24 205.97C927.26 212.98 927.18 216.67 927.00 217.00C926.77 217.43 926.47 217.50 924.79 217.50C923.61 217.50 922.73 217.38 922.55 217.20ZM546.52 213.31C549.65 212.40 551.50 210.23 551.50 207.46C551.50 206.29 551.41 205.97 551.02 205.76C550.32 205.38 544.46 205.45 542.12 205.86C540.27 206.18 540.06 206.29 539.19 207.26C538.39 208.16 538.25 208.48 538.25 209.49C538.25 212.74 542.21 214.57 546.52 213.31ZM742.89 213.25C744.62 212.66 746.66 211.03 747.16 209.84C747.35 209.38 747.50 208.34 747.50 207.52C747.50 206.29 747.41 205.97 747.02 205.76C746.37 205.41 740.29 205.46 738.25 205.84C736.36 206.18 735.47 206.70 734.76 207.91C734.12 209.00 734.11 210.00 734.73 211.20C735.89 213.44 739.59 214.36 742.89 213.25ZM967.28 213.22C968.73 212.78 970.61 211.25 971.26 209.99C971.82 208.89 971.94 206.29 971.45 205.80C971.05 205.40 965.11 205.40 962.67 205.79C959.50 206.30 958.04 208.09 958.74 210.60C959.12 211.96 959.91 212.74 961.45 213.30C962.82 213.80 965.47 213.76 967.28 213.22ZM520.37 213.11C523.72 212.51 524.64 208.50 521.87 206.59C520.90 205.93 520.77 205.91 516.45 205.80C514.02 205.74 511.63 205.76 511.14 205.86L510.25 206.02L510.25 209.46C510.25 211.88 510.34 212.99 510.56 213.22C510.80 213.46 511.89 213.51 515.12 213.41C517.46 213.34 519.82 213.21 520.37 213.11ZM488.88 212.33C492.01 210.74 493.73 207.79 493.73 204.00C493.73 200.04 491.94 197.17 488.42 195.51C486.62 194.66 483.36 194.69 481.47 195.59C480.06 196.26 478.52 197.58 477.62 198.89C476.38 200.72 475.90 204.69 476.66 206.99C477.68 210.08 480.39 212.57 483.25 213.03C485.12 213.32 487.49 213.03 488.88 212.33ZM647.88 212.41C650.05 211.25 651.63 209.60 652.13 207.96C652.23 207.64 652.44 207.22 652.59 207.02C652.76 206.81 652.88 205.61 652.88 204.00C652.88 202.39 652.76 201.19 652.59 200.98C652.44 200.78 652.23 200.36 652.13 200.04C651.60 198.32 649.93 196.64 647.65 195.53C645.85 194.66 642.61 194.68 640.67 195.57C637.27 197.13 635.49 200.03 635.51 204.00C635.53 207.80 637.16 210.71 640.14 212.27C642.21 213.36 645.98 213.43 647.88 212.41ZM845.33 212.29C847.06 211.40 848.27 210.14 849.25 208.22C850.03 206.72 850.07 206.48 850.07 204.00C850.07 201.52 850.03 201.28 849.26 199.78C848.24 197.81 846.89 196.47 845.04 195.61C843.86 195.06 843.26 194.95 841.43 194.95C839.47 194.94 839.06 195.03 837.68 195.71C835.83 196.62 834.56 197.87 833.59 199.75C832.92 201.04 832.88 201.31 832.88 204.12C832.88 206.84 832.93 207.23 833.49 208.25C834.83 210.70 837.05 212.46 839.50 213.02C841.07 213.37 843.92 213.02 845.33 212.29ZM777.02 204.99C777.47 204.75 777.50 204.42 777.50 200.00L777.50 195.26L776.87 195.10C776.52 195.01 774.36 194.99 772.06 195.06C767.31 195.19 766.22 195.49 764.82 197.08C763.62 198.46 763.40 201.42 764.39 202.94C764.91 203.73 766.71 204.85 767.75 205.03C769.28 205.29 776.50 205.27 777.02 204.99ZM520.42 201.39C521.41 200.93 521.84 200.55 522.24 199.78C522.85 198.57 522.87 197.89 522.30 196.83C521.65 195.63 520.79 195.10 518.98 194.78C516.66 194.38 510.89 194.41 510.55 194.82C510.25 195.18 510.08 201.27 510.35 201.71C510.47 201.91 511.85 202.00 514.83 202.00C518.85 202.00 519.21 201.96 520.42 201.39ZM615.88 152.11C613.95 151.92 611.83 151.59 611.16 151.38C610.49 151.17 609.63 151.00 609.25 151.00C608.88 151.00 607.86 150.77 607.00 150.50C606.14 150.23 605.25 150.00 605.03 149.99C604.81 149.99 604.17 149.77 603.62 149.50C603.08 149.23 602.43 149.01 602.19 149.01C601.79 149.00 601.20 148.76 598.25 147.43C595.72 146.29 593.68 145.23 591.72 144.03C590.79 143.46 588.15 141.67 588.00 141.51C587.93 141.43 587.42 141.04 586.88 140.64C584.20 138.68 579.15 133.13 577.36 130.18C575.98 127.92 575.25 126.63 574.99 126.00C574.85 125.66 574.58 125.04 574.40 124.62C573.27 122.12 573.00 121.44 572.99 121.06C572.98 120.82 572.81 120.18 572.61 119.62C571.85 117.58 571.26 113.00 571.26 109.07C571.25 105.07 571.90 99.89 572.63 98.15C572.83 97.66 573.00 97.04 573.00 96.76C573.00 96.30 573.21 95.76 574.50 92.88C574.75 92.32 575.02 91.71 575.10 91.50C575.26 91.10 576.15 89.55 577.36 87.57C579.36 84.30 584.17 79.10 587.38 76.73C588.20 76.13 588.93 75.57 589.00 75.50C589.30 75.19 591.26 74.00 591.46 74.00C591.59 74.00 591.83 73.82 592.01 73.61C592.19 73.40 592.68 73.06 593.11 72.87C593.53 72.67 594.07 72.40 594.31 72.26C594.55 72.11 594.95 71.89 595.19 71.75C596.92 70.74 602.81 68.40 604.62 67.99C605.17 67.86 606.08 67.60 606.62 67.39C607.17 67.19 607.93 67.02 608.30 67.01C608.68 67.00 609.46 66.84 610.05 66.64C611.80 66.05 618.31 65.44 623.00 65.43C629.75 65.40 635.30 66.08 640.00 67.51C640.89 67.78 641.78 68.01 641.96 68.00C642.15 68.00 642.65 68.16 643.09 68.36C643.52 68.56 644.35 68.90 644.94 69.11C647.67 70.11 648.15 70.31 648.52 70.64C648.74 70.84 649.09 71.00 649.30 71.00C649.51 71.00 649.97 71.23 650.32 71.50C650.67 71.78 651.09 72.00 651.25 72.00C651.41 72.00 651.83 72.22 652.18 72.50C652.53 72.77 652.95 73.00 653.12 73.00C653.29 73.00 653.63 73.23 653.88 73.50C654.12 73.78 654.43 74.00 654.55 74.00C655.42 74.00 662.55 80.39 665.01 83.38C666.59 85.29 668.94 89.04 670.21 91.69C670.33 91.93 670.54 92.35 670.68 92.62C670.83 92.90 671.19 93.74 671.50 94.50C671.81 95.26 672.21 96.24 672.40 96.70C672.70 97.40 672.88 98.70 672.69 98.77C672.65 98.78 668.28 98.85 662.98 98.93L653.33 99.06L652.66 97.87C652.30 97.22 652.00 96.58 652.00 96.44C652.00 96.31 651.38 95.32 650.62 94.24C649.01 91.96 645.48 88.56 643.59 87.48C642.86 87.06 642.20 86.63 642.13 86.51C641.98 86.27 637.87 84.25 636.32 83.66C633.08 82.43 631.24 81.96 626.75 81.22C624.70 80.88 619.27 81.09 616.62 81.61C610.61 82.80 604.67 85.40 600.86 88.52C595.24 93.10 591.87 98.58 590.98 104.55C590.48 107.89 590.79 115.23 591.46 116.10C591.58 116.25 591.81 116.92 591.97 117.58C592.51 119.80 594.05 122.57 596.27 125.33C598.43 128.02 601.55 130.51 605.50 132.73C605.71 132.85 606.49 133.19 607.25 133.50C608.01 133.81 609.08 134.26 609.62 134.50C610.17 134.75 611.08 135.02 611.62 135.12C612.17 135.22 612.75 135.40 612.90 135.52C613.06 135.65 613.96 135.87 614.90 136.01C615.85 136.14 617.24 136.36 618.00 136.48C618.76 136.61 621.06 136.72 623.12 136.73C626.18 136.74 627.38 136.63 629.62 136.14C633.22 135.36 634.87 134.87 635.56 134.39C635.86 134.18 636.32 134.00 636.58 134.00C636.84 134.00 637.33 133.78 637.68 133.50C638.03 133.22 638.51 133.00 638.75 133.00C638.99 133.00 639.33 132.84 639.49 132.63C639.66 132.43 640.04 132.19 640.33 132.10C640.82 131.94 642.70 130.81 643.00 130.50C643.07 130.42 643.45 130.16 643.84 129.91C645.11 129.10 648.53 125.67 649.72 124.02C650.35 123.14 651.27 121.73 651.76 120.89L652.65 119.38L662.51 119.25C669.59 119.16 672.47 119.20 672.71 119.40C672.98 119.64 672.95 119.92 672.50 121.03C670.83 125.23 668.59 129.53 666.60 132.38C663.06 137.43 657.04 142.75 651.50 145.72C650.69 146.15 649.85 146.59 649.44 146.79C648.99 147.01 648.32 147.34 647.56 147.72C647.05 147.98 644.99 148.80 643.75 149.24C635.96 152.00 625.71 153.05 615.88 152.11ZM925.50 152.13C921.90 151.81 919.10 151.28 914.88 150.12C911.81 149.29 907.73 147.68 905.06 146.27C904.82 146.14 904.46 145.97 904.25 145.89C904.04 145.82 903.31 145.42 902.62 145.01C901.94 144.60 901.15 144.17 900.86 144.04C900.58 143.91 900.20 143.62 900.02 143.40C899.84 143.18 899.58 143.00 899.46 143.00C899.03 143.00 895.65 140.34 893.45 138.27C891.12 136.08 888.72 133.30 887.07 130.88C885.88 129.13 884.00 125.81 884.00 125.46C884.00 125.33 883.79 124.81 883.52 124.30C882.90 123.08 882.00 120.71 882.00 120.26C882.00 120.07 881.79 119.23 881.52 118.39C880.17 114.08 880.17 104.13 881.53 99.52C881.79 98.64 882.00 97.72 882.00 97.49C882.00 96.68 883.45 93.25 885.14 90.07C888.23 84.26 894.31 77.83 900.11 74.25C902.32 72.89 903.34 72.29 903.75 72.12C904.16 71.95 904.60 71.73 905.38 71.30C906.14 70.89 907.66 70.24 911.92 68.52C912.63 68.24 913.41 68.00 913.65 68.00C913.89 68.00 914.77 67.79 915.61 67.52C924.51 64.74 940.73 64.74 949.31 67.53C950.10 67.79 950.93 68.00 951.15 68.00C951.37 68.00 951.90 68.16 952.34 68.36C952.77 68.56 953.63 68.91 954.25 69.14C956.43 69.93 956.90 70.13 957.56 70.56C957.93 70.80 958.38 71.00 958.55 71.01C958.73 71.01 959.16 71.23 959.50 71.50C959.84 71.77 960.27 71.99 960.45 71.99C960.74 72.00 965.68 75.12 966.00 75.50C966.07 75.58 966.52 75.92 967.00 76.25C968.29 77.13 972.32 81.10 974.11 83.25C975.44 84.86 976.49 86.38 977.83 88.62C977.99 88.90 978.32 89.42 978.56 89.79C978.80 90.15 979.00 90.59 979.00 90.75C979.00 90.91 979.21 91.35 979.46 91.71C979.71 92.08 980.18 93.05 980.49 93.88C980.80 94.70 981.27 95.84 981.53 96.40C982.12 97.69 982.13 98.42 981.56 98.69C981.32 98.80 976.91 98.89 971.77 98.88L962.41 98.88L961.68 97.38C960.87 95.68 960.89 95.72 959.90 94.22C958.94 92.77 955.71 89.45 954.41 88.59C953.84 88.21 953.15 87.71 952.88 87.47C952.14 86.85 946.84 84.01 946.38 83.99C946.24 83.99 945.67 83.77 945.12 83.50C944.58 83.23 944.01 83.01 943.88 83.01C943.74 83.01 942.89 82.79 942.00 82.52C938.00 81.31 936.75 81.13 932.38 81.13C928.30 81.14 926.96 81.30 923.00 82.24C920.92 82.74 916.32 84.58 914.19 85.76C913.95 85.89 913.59 86.08 913.40 86.19C909.57 88.27 904.51 93.55 902.44 97.62C899.12 104.19 899.05 113.97 902.29 120.32C903.43 122.57 904.29 123.89 905.59 125.46C907.20 127.39 911.68 131.15 913.38 132.00C913.92 132.28 914.54 132.60 914.75 132.71C916.80 133.87 921.65 135.56 924.12 135.98C924.95 136.11 926.30 136.35 927.12 136.49C928.91 136.80 935.40 136.81 937.00 136.51C937.62 136.39 938.77 136.18 939.55 136.04C941.14 135.75 943.12 135.15 944.62 134.50C946.35 133.76 948.11 132.96 948.62 132.68C948.90 132.53 949.35 132.29 949.62 132.14C953.08 130.27 957.62 126.13 959.81 122.86C960.47 121.88 961.00 121.00 961.00 120.90C961.00 120.79 961.23 120.38 961.52 119.98L962.03 119.25L972.02 119.25L982.00 119.25L982.00 119.91C982.00 120.27 981.79 121.03 981.53 121.60C981.27 122.16 980.81 123.24 980.50 124.00C980.19 124.76 979.82 125.60 979.67 125.88C979.53 126.15 979.20 126.77 978.95 127.25C977.61 129.82 974.86 133.78 972.75 136.20C970.29 139.01 964.39 144.00 963.53 144.00C963.42 144.00 963.12 144.23 962.88 144.50C962.63 144.77 962.29 145.00 962.12 145.00C961.95 145.00 961.53 145.23 961.18 145.50C960.83 145.77 960.41 146.00 960.25 146.00C960.09 146.00 959.67 146.23 959.32 146.50C958.97 146.77 958.52 147.00 958.32 147.00C958.12 147.00 957.67 147.23 957.32 147.50C956.97 147.77 956.51 148.00 956.31 148.00C956.10 148.00 955.47 148.21 954.90 148.46C952.83 149.40 949.53 150.41 947.00 150.90C945.97 151.09 944.79 151.36 944.38 151.50C943.08 151.91 935.77 152.50 932.25 152.47C930.39 152.45 927.36 152.30 925.50 152.13ZM692.80 150.20C692.58 149.98 692.50 147.94 692.50 142.58L692.50 135.26L693.06 135.15C693.37 135.08 694.92 134.96 696.50 134.88C699.67 134.71 702.12 134.15 703.57 133.27C704.74 132.56 705.00 132.08 705.00 130.69C705.00 129.61 704.44 128.32 702.25 124.44C702.11 124.20 701.89 123.80 701.75 123.56C701.62 123.32 701.30 122.73 701.04 122.25C699.57 119.49 698.64 117.83 698.39 117.50C698.23 117.29 697.96 116.84 697.80 116.50C697.51 115.90 697.42 115.72 696.79 114.62C696.64 114.35 696.30 113.73 696.04 113.25C695.46 112.15 693.83 109.20 693.08 107.88C692.77 107.32 692.31 106.48 692.05 106.00C691.79 105.52 691.34 104.70 691.04 104.19C690.13 102.61 689.56 101.59 689.27 101.03C689.12 100.74 688.88 100.26 688.73 99.97C688.44 99.41 687.87 98.39 686.96 96.81C686.66 96.30 686.21 95.48 685.95 95.00C685.69 94.52 685.23 93.68 684.92 93.12C683.80 91.14 682.42 88.61 681.96 87.70C681.71 87.20 681.39 86.71 681.25 86.63C681.11 86.54 681.00 86.27 681.00 86.02C681.00 85.77 680.82 85.42 680.61 85.24C680.40 85.06 680.06 84.57 679.87 84.14C679.68 83.72 679.05 82.53 678.48 81.50C677.90 80.47 677.22 79.23 676.96 78.75C676.70 78.27 676.38 77.68 676.25 77.44C676.11 77.20 675.89 76.80 675.75 76.56C675.62 76.32 675.30 75.73 675.04 75.25C674.27 73.79 672.98 71.46 672.09 69.92C670.57 67.29 669.80 67.50 681.07 67.50C689.55 67.50 690.96 67.55 691.44 67.89C691.75 68.10 692.00 68.47 692.00 68.71C692.00 68.95 692.10 69.26 692.23 69.39C692.44 69.61 693.19 70.89 693.69 71.90C694.12 72.77 694.54 73.56 695.07 74.47C695.35 74.97 695.79 75.77 696.05 76.25C696.30 76.73 696.60 77.29 696.71 77.50C697.06 78.13 697.57 79.08 698.05 80.00C698.30 80.48 698.60 81.04 698.71 81.25C698.83 81.46 699.06 81.89 699.23 82.22C699.41 82.55 699.75 83.18 700.00 83.62C700.48 84.48 700.93 85.32 701.31 86.10C701.44 86.36 701.78 86.97 702.07 87.47C702.35 87.97 702.79 88.77 703.05 89.25C703.30 89.73 703.60 90.29 703.71 90.50C704.06 91.13 704.57 92.08 705.05 93.00C705.30 93.48 705.60 94.04 705.71 94.25C705.83 94.46 706.06 94.89 706.23 95.22C706.41 95.55 706.75 96.18 707.00 96.63C707.25 97.07 707.58 97.67 707.73 97.97C707.88 98.26 708.12 98.74 708.27 99.03C708.42 99.33 708.78 99.97 709.07 100.47C709.35 100.97 709.79 101.77 710.05 102.25C710.30 102.73 710.60 103.29 710.71 103.50C711.06 104.13 711.57 105.08 712.05 106.00C712.30 106.48 712.60 107.04 712.71 107.25C712.83 107.46 713.06 107.89 713.23 108.22C713.41 108.55 713.75 109.18 714.00 109.63C714.25 110.07 714.58 110.67 714.73 110.97C714.88 111.26 715.12 111.74 715.27 112.03C715.42 112.33 715.78 112.97 716.07 113.47C716.35 113.97 716.79 114.77 717.05 115.25C717.30 115.73 717.60 116.29 717.71 116.50C718.10 117.19 718.59 118.12 718.93 118.79C719.45 119.83 719.92 120.13 720.40 119.73C720.62 119.55 720.91 119.17 721.04 118.89C721.17 118.60 721.52 117.97 721.83 117.47C722.13 116.97 722.88 115.69 723.50 114.62C724.12 113.56 724.87 112.28 725.16 111.78C725.46 111.28 725.90 110.54 726.13 110.12C726.56 109.37 726.84 108.90 727.84 107.21C728.13 106.71 729.11 105.04 730.00 103.50C730.89 101.96 731.87 100.29 732.16 99.79C732.46 99.29 732.88 98.57 733.10 98.19C733.32 97.81 733.68 97.19 733.90 96.81C734.12 96.43 734.54 95.72 734.84 95.22C735.13 94.72 735.88 93.44 736.50 92.38C737.12 91.31 737.87 90.03 738.16 89.53C738.46 89.03 738.86 88.34 739.06 88.00C739.26 87.66 739.68 86.93 740.00 86.38C740.32 85.82 740.74 85.09 740.94 84.75C741.14 84.41 741.54 83.72 741.84 83.23C742.13 82.73 742.86 81.49 743.45 80.48C744.04 79.46 744.73 78.29 744.98 77.88C746.06 76.07 746.53 75.27 747.48 73.58C748.04 72.59 748.61 71.71 748.75 71.63C748.89 71.54 749.01 71.28 749.02 71.05C749.03 70.82 749.51 69.95 750.09 69.12L751.14 67.62L761.01 67.62L770.88 67.62L770.95 68.18C771.00 68.48 770.82 69.04 770.55 69.43C769.79 70.54 769.15 71.57 768.82 72.25C768.65 72.59 768.37 73.10 768.19 73.37C766.35 76.23 766.00 76.81 766.00 77.00C766.00 77.12 765.57 77.87 765.04 78.67C764.52 79.47 764.01 80.29 763.91 80.50C763.81 80.71 763.48 81.28 763.18 81.78C762.87 82.28 762.14 83.52 761.55 84.53C760.96 85.55 760.26 86.71 759.99 87.12C759.73 87.54 759.31 88.23 759.07 88.67C758.39 89.87 756.53 93.03 756.00 93.88C755.74 94.29 755.05 95.46 754.45 96.48C753.86 97.49 753.13 98.73 752.83 99.23C752.52 99.72 752.16 100.35 752.02 100.62C751.87 100.90 751.47 101.57 751.13 102.12C750.78 102.68 750.36 103.41 750.19 103.75C750.01 104.09 749.47 104.99 748.98 105.75C748.49 106.51 748.01 107.29 747.91 107.50C747.81 107.71 747.48 108.28 747.18 108.78C746.87 109.28 746.14 110.52 745.55 111.53C744.49 113.35 743.87 114.40 742.98 115.88C742.73 116.29 742.06 117.41 741.50 118.38C740.94 119.34 740.20 120.57 739.86 121.12C739.52 121.68 739.16 122.29 739.07 122.50C738.98 122.71 738.51 123.49 738.02 124.25C737.53 125.01 736.99 125.91 736.81 126.25C736.64 126.59 736.28 127.24 736.00 127.69C735.73 128.13 735.27 128.87 735.00 129.31C734.72 129.76 734.36 130.41 734.19 130.75C734.01 131.09 733.47 131.99 732.98 132.75C732.49 133.51 732.02 134.29 731.93 134.50C731.84 134.71 731.48 135.32 731.14 135.88C730.80 136.43 730.13 137.56 729.65 138.39C728.70 140.05 725.59 143.17 724.07 144.00C723.55 144.28 722.67 144.79 722.12 145.14C721.58 145.48 720.96 145.82 720.75 145.90C720.54 145.97 719.89 146.25 719.31 146.52C718.72 146.78 718.04 147.00 717.81 147.00C717.57 147.00 717.05 147.17 716.65 147.38C715.97 147.73 714.33 148.21 711.75 148.78C711.13 148.92 709.97 149.20 709.18 149.40C705.52 150.31 693.50 150.90 692.80 150.20ZM372.56 150.08C372.11 149.90 372.10 68.25 372.55 67.80C372.78 67.57 379.94 67.50 403.28 67.50C428.72 67.50 434.27 67.56 437.16 67.88C439.07 68.09 440.91 68.36 441.25 68.49C441.59 68.62 442.53 68.85 443.32 69.01C444.12 69.16 445.07 69.45 445.45 69.64C445.82 69.84 446.32 70.00 446.56 70.00C446.79 70.00 447.47 70.21 448.06 70.47C448.64 70.74 449.41 71.07 449.75 71.22C450.09 71.37 450.54 71.60 450.75 71.73C450.96 71.86 451.29 72.03 451.50 72.12C454.34 73.29 459.63 77.84 461.54 80.75C462.69 82.51 464.00 84.92 464.01 85.32C464.01 85.49 464.23 86.07 464.50 86.62C464.77 87.18 464.99 87.89 464.99 88.21C465.00 88.53 465.18 89.42 465.40 90.18C465.73 91.30 465.78 92.44 465.69 96.34C465.54 102.81 465.04 105.09 462.82 109.61C460.53 114.26 457.25 117.44 452.25 119.86C451.77 120.09 451.18 120.38 450.95 120.51C450.72 120.63 449.65 121.01 448.58 121.35C442.02 123.42 441.08 123.48 414.24 123.49C397.17 123.50 391.78 123.57 391.55 123.80C391.32 124.03 391.25 127.27 391.25 136.88C391.25 146.48 391.18 149.72 390.95 149.95C390.73 150.17 388.36 150.24 381.76 150.23C376.87 150.22 372.73 150.15 372.56 150.08ZM477.94 149.98C477.52 149.74 477.50 147.52 477.50 108.91C477.50 77.50 477.57 68.03 477.80 67.80C478.03 67.57 487.73 67.50 519.92 67.50L561.74 67.50L561.85 68.06C561.92 68.37 562.04 71.70 562.12 75.46C562.23 80.51 562.20 82.39 561.98 82.65C561.73 82.95 556.89 83.00 529.49 83.00C511.78 83.00 497.11 83.07 496.90 83.15C496.55 83.29 496.50 84.23 496.50 91.23C496.50 97.06 496.58 99.23 496.80 99.45C497.03 99.68 503.55 99.75 524.61 99.75C539.74 99.76 552.26 99.84 552.43 99.95C552.65 100.09 552.74 102.00 552.76 107.31C552.78 111.25 552.72 114.60 552.63 114.74C552.52 114.92 543.75 115.00 524.88 115.00C509.71 115.00 497.11 115.07 496.90 115.15C496.54 115.29 496.50 116.39 496.50 125.02C496.50 134.02 496.53 134.75 496.94 134.95C497.19 135.08 510.89 135.10 529.38 135.01C549.55 134.90 561.49 134.92 561.69 135.07C562.13 135.41 562.14 149.51 561.70 149.95C561.30 150.35 478.62 150.37 477.94 149.98ZM778.56 150.08C778.11 149.90 778.10 68.25 778.55 67.80C778.78 67.57 785.96 67.50 809.36 67.50C845.26 67.51 844.64 67.48 852.09 69.80C854.28 70.49 859.64 72.96 859.99 73.46C860.06 73.56 860.69 74.00 861.38 74.44C863.04 75.49 866.72 79.26 867.91 81.12C869.41 83.48 869.80 84.23 870.43 86.00C872.23 91.06 872.47 96.69 871.16 103.38C869.86 110.08 866.04 115.42 859.88 119.17C858.89 119.77 856.69 120.75 855.75 121.00C855.22 121.14 854.47 121.42 854.08 121.63C853.69 121.83 853.14 122.00 852.85 122.00C852.56 122.00 851.78 122.17 851.10 122.39C848.11 123.33 843.75 123.48 820.36 123.49C803.19 123.50 797.78 123.57 797.55 123.80C797.32 124.03 797.25 127.27 797.25 136.88C797.25 146.48 797.18 149.72 796.95 149.95C796.73 150.17 794.36 150.24 787.76 150.23C782.87 150.22 778.73 150.15 778.56 150.08ZM435.58 108.23C439.53 107.89 440.97 107.49 442.94 106.18C444.09 105.41 446.00 103.54 446.00 103.18C446.00 103.05 446.21 102.65 446.47 102.29C447.58 100.71 448.05 95.14 447.36 91.75C446.90 89.44 446.34 88.21 445.03 86.56C444.23 85.55 442.24 84.00 441.75 84.00C441.63 84.00 441.16 83.79 440.70 83.53C440.14 83.21 438.71 82.93 436.25 82.64C433.09 82.28 429.97 82.24 412.00 82.30L391.38 82.38L391.31 95.10C391.26 104.28 391.32 107.91 391.53 108.16C391.76 108.44 395.28 108.50 412.18 108.50C424.55 108.50 433.73 108.40 435.58 108.23ZM841.68 108.24C846.16 107.86 848.49 107.00 850.69 104.91C852.88 102.82 853.81 100.00 853.80 95.50C853.79 90.68 852.78 87.96 850.13 85.58C848.41 84.04 846.87 83.30 844.75 82.99C840.03 82.29 837.86 82.24 818.00 82.30L797.38 82.38L797.31 95.10C797.26 104.28 797.32 107.91 797.53 108.16C797.76 108.44 801.28 108.50 818.15 108.50C830.30 108.50 839.78 108.39 841.68 108.24Z"/></svg>
+</a>
+    <nav aria-label="Разделы">
+      <a href="#scheme">Схема</a>
+      <a href="#law">Сверка с законом</a>
+      <a href="#calc">Калькулятор</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="ruler" aria-hidden="true"></div>
+    <div class="eyebrow">Москва · комплексное развитие территорий</div>
+    <h1>Изъятие недвижимости в&nbsp;рамках КРТ</h1>
+    <div class="band"><p>Весь путь от первого обращения до выплаты возмещения: 20 шагов, 8 участников, три этапа. Каждый срок сверен с Земельным и Градостроительным кодексами.</p></div>
+    <div class="legend" aria-label="Линии схемы">
+      <span style="--c:#0B1750"><i style="box-shadow:0 0 0 1px rgba(255,255,255,.6)"></i>Линия 1 · Решение о КРТ</span>
+      <span style="--c:#9CBBF5"><i></i>Линия 2 · Договор о КРТ</span>
+      <span style="--c:#FFFFFF"><i></i>Линия 3 · Изъятие</span>
+      <span class="tr"><i></i>Переход между этапами</span>
+    </div>
+    <div class="wm" aria-hidden="true">КРТ</div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="deadlines" aria-label="Ключевые сроки">
+      <div class="dl"><b>45<small>дней</small></b><span>правообладателям на согласие заключить договор о КРТ</span></div>
+      <div class="dl"><b>7<small>раб. дней</small></b><span>на публикацию решения об изъятии и уведомление</span></div>
+      <div class="dl"><b>90<small>дней</small></b><span>на рассмотрение проекта соглашения по регламенту</span></div>
+      <div class="dl"><b>7<small>дней</small></b><span>на выплату возмещения после решения суда</span></div>
+    </div>
+  </div>
+
+  <section id="scheme">
+    <div class="wrap">
+      <div class="sh">
+        <div class="idx">01</div>
+        <h2>Схема процедуры<span>как линии метро</span></h2>
+        <p>Нажмите на станцию, чтобы увидеть ответственных, сроки и норму закона. Или запустите маршрут целиком.</p>
+      </div>
+      <div class="controls">
+        <div>
+          <div class="ctl-label" id="role-label">Шаги участника</div>
+          <div class="chips" id="roles" role="group" aria-labelledby="role-label"></div>
+          <div class="role-note" id="role-note" aria-live="polite"></div>
+        </div>
+        <div>
+          <div class="ctl-label" id="route-label">Маршрут</div>
+          <div class="chips" id="routes" role="group" aria-labelledby="route-label">
+            <button class="chip" type="button" data-route="agree" aria-pressed="true">Соглашение</button>
+            <button class="chip" type="button" data-route="court" aria-pressed="false">Через суд</button>
+            <button class="chip" type="button" data-route="all" aria-pressed="false">Все согласны</button>
+            <button class="play" type="button" id="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg><span>Пройти маршрут</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="main">
+        <div class="map-wrap" id="map-wrap">
+          <svg class="layer rails" id="rails" aria-hidden="true"></svg>
+          <ol class="map" id="map" aria-label="Шаги процедуры"></ol>
+          <svg class="layer train-layer" id="train-layer" aria-hidden="true"><g id="train" opacity="0"><circle r="10" fill="var(--fg)"/><circle r="4" fill="var(--surface)"/></g></svg>
+        </div>
+        <aside class="detail" id="detail" aria-live="polite"></aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="law">
+    <div class="wrap">
+      <div class="sh">
+        <div class="idx">02</div>
+        <h2>Сверка с законом<span>пять мест, где регламент расходится с кодексами</span></h2>
+        <p>Мы сравнили сроки и порядок из регламента с текстами Земельного и Градостроительного кодексов. Нажмите на строку, чтобы открыть шаг на схеме.</p>
+      </div>
+      <div class="diff-head" aria-hidden="true"><span>Шаг</span><span>В регламенте</span><span>По закону</span><span>Норма</span></div>
+      <div class="diff" id="diff"></div>
+      <div class="ok-list" id="ok-list"></div>
+    </div>
+  </section>
+
+  <section id="calc">
+    <div class="wrap">
+      <div class="sh">
+        <div class="idx">03</div>
+        <h2>Калькулятор сроков<span>для правообладателя</span></h2>
+        <p>Введите две даты, и калькулятор покажет сроки по регламенту и по закону. Дни календарные, рабочие дни считаются без учёта праздников.</p>
+      </div>
+      <div class="calc-grid">
+        <div class="inputs">
+          <span class="sample" id="sample">Пример: даты подставлены для показа</span>
+          <div class="field">
+            <label for="d1">Дата распоряжения об изъятии</label>
+            <input type="date" id="d1">
+            <small>Шаг 7, распоряжение ДГИ</small>
+          </div>
+          <div class="field">
+            <label for="d2">Дата вручения проекта соглашения</label>
+            <input type="date" id="d2">
+            <small>Шаг 9. Если письмо вернулось, указывается дата возврата (ЗК РФ, ст. 56.10 п. 6)</small>
+          </div>
+        </div>
+        <div class="out">
+          <div class="status" id="status"></div>
+          <div>
+            <div class="tl-wrap" id="tl-wrap"><div class="tl" id="tl"></div></div>
+            <div class="tl-legend">
+              <span style="--c:var(--l2)"><i></i>Уведомление</span>
+              <span style="--c:var(--grey)"><i></i>Оценка</span>
+              <span style="--c:var(--l3)"><i></i>Рассмотрение по регламенту</span>
+              <span style="--c:var(--l1)"><i></i>Окно для иска по регламенту</span>
+            </div>
+          </div>
+          <ol class="ms" id="ms"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <h3>Источники</h3>
+    <p>Регламент «Процедура изъятия в рамках КРТ», редакция 2.0. Тексты норм сверены 17 октября 2026 года по открытым публикациям кодексов. Схема справочная и не заменяет юридическую консультацию.</p>
+    <ul class="src" id="src"></ul>
+    <details>
+      <summary>Сокращения</summary>
+      <dl class="gloss" id="gloss"></dl>
+    </details>
+  </div>
+</footer>
+
+<script>
+(function(){
+const ROLE = {
+  owner:   {s:'Правообладатель', f:''},
+  investor:{s:'Инвестор', f:'застройщик, сторона договора о КРТ'},
+  dgp:     {s:'ДГП', f:'Департамент градостроительной политики'},
+  dgi:     {s:'ДГИ', f:'Департамент городского имущества'},
+  mcn:     {s:'МЦН', f:'ГКУ «Московский центр недвижимости»'},
+  gov:     {s:'Правительство и ГЗК', f:'Правительство Москвы, Штаб по реализации проектов КРТ, Градостроительно-земельная комиссия'},
+  dkp:     {s:'ДКП', f:'Департамент по конкурентной политике'},
+  rr:      {s:'Росреестр', f:'регистрация прав в ЕГРН'}
+};
+const GLOSS = [
+  ['КРТ','комплексное развитие территорий'],['ДГП','Департамент градостроительной политики'],['ДГИ','Департамент городского имущества'],
+  ['МЦН','ГКУ «Московский центр недвижимости»'],['ГЗК','Градостроительно-земельная комиссия'],['ДКП','Департамент по конкурентной политике'],
+  ['ППТ','проект планировки территории'],['ВРИ','вид разрешённого использования'],['ЗУ, з/у','земельный участок'],
+  ['ОКС','объект капитального строительства'],['ЕГРН','Единый государственный реестр недвижимости'],['ЗК, ГрК','Земельный и Градостроительный кодексы РФ']
+];
+const SRC = [
+  ['ЗК РФ, ст. 56.6 — решение об изъятии','https://legalacts.ru/kodeks/ZK-RF/glava-vii.1/statja-56.6/'],
+  ['ЗК РФ, ст. 56.10 — соглашение об изъятии','https://legalacts.ru/kodeks/ZK-RF/glava-vii.1/statja-56.10/'],
+  ['ЗК РФ, ст. 56.11 — последствия изъятия','https://legalacts.ru/kodeks/ZK-RF/glava-vii.1/statja-56.11/'],
+  ['ЗК РФ, ст. 56.12 — изъятие для КРТ','https://legalacts.ru/kodeks/ZK-RF/glava-vii.1/statja-56.12/'],
+  ['ГрК РФ, ст. 66 — порядок решения о КРТ','https://pravo.ppt.ru/kodeks/grk/st-66'],
+  ['ГрК РФ, ст. 69 — торги на договор о КРТ','https://pravo.ppt.ru/kodeks/grk/st-69'],
+  ['ГрК РФ, ст. 70 — КРТ по инициативе правообладателей','https://pravo.ppt.ru/kodeks/grk/st-70'],
+  ['ПП Москвы № 1019-ПП — о ГЗК','https://base.garant.ru/407523097/']
+];
+const PH = {
+  1:{name:'Решение о КРТ', c:'var(--l1)'},
+  2:{name:'Договор о КРТ', c:'var(--l2)'},
+  3:{name:'Изъятие', c:'var(--l3)'}
+};
+/* Расхождения регламента с законом */
+const DIFF = [
+  {id:'3',  reg:'45 дней с размещения проекта решения.',
+   law:'45 дней считаются <b>со дня получения предложения</b> правообладателем.', ref:'ГрК РФ, ст. 66 ч. 8 п. 5'},
+  {id:'8',  reg:'10 дней на уведомление.',
+   law:'Для КРТ <b>7 рабочих дней</b>: официальная публикация, сайт, информационный щит на территории и копия решения правообладателю. 10 дней — общий срок ст. 56.6.', ref:'ЗК РФ, ст. 56.12 п. 4'},
+  {id:'10', reg:'90 дней на рассмотрение проекта соглашения.',
+   law:'Для КРТ иск возможен, если соглашение не заключено <b>в течение месяца</b> после ознакомления с проектом. 90 дней — срок общей процедуры ст. 56.10.', ref:'ЗК РФ, ст. 56.12 п. 9'},
+  {id:'11.2', reg:'Иск через месяц после 90 дней, всего 120 дней.',
+   law:'<b>Суммарного срока 120 дней в законе нет.</b> Решение об изъятии действует три года.', ref:'ЗК РФ, ст. 56.12 п. 9; ст. 56.6 п. 13'},
+  {id:'12.1', reg:'Сначала регистрация прекращения прав, потом выплата.',
+   law:'При денежном возмещении права прекращаются <b>только после выплаты</b>. После решения суда выплата — в течение 7 дней.', ref:'ЗК РФ, ст. 56.11 п. 2; ст. 56.12 п. 11'}
+];
+const OK = [
+  'Торги обязательны, если договор подписали не все правообладатели — ГрК, ст. 69 ч. 1',
+  'Договор со всеми правообладателями заключается без торгов — ГрК, ст. 70 ч. 10',
+  'Предложение правообладателям направляется до итогового решения — ГрК, ст. 66 ч. 8',
+  'ГЗК создана ПП Москвы № 1019-ПП'
+];
+const S = [
+  {id:'0', n:'0', ph:1, end:true, t:'Обращение', who:['dgp','investor','owner'],
+   txt:'Процедура начинается с обращения. Его может направить ДГП по поручению заместителя мэра, инвестор или сами правообладатели.'},
+  {id:'pre', n:'П', ph:1, t:'Предварительный этап', who:['dgp','dgi'],
+   txt:'Оценивается экономическая целесообразность: потенциал застройки, ветхие и неэффективно используемые объекты, транспортная и социальная нагрузка. Определяются границы территории, ВРИ, предельные параметры застройки, перечень объектов на снос и сохранение. Если потенциал есть, готовится проект решения о КРТ.',
+   own:'Здесь решается, какие объекты пойдут под снос, а какие сохранятся.'},
+  {id:'1', n:'1', ph:1, t:'Проект решения о КРТ', who:['gov','dgp'], law:'ПП Москвы № 1019-ПП (о ГЗК)',
+   txt:'Проект готовит ДГП, рассматривает Штаб по реализации проектов КРТ. Если на Штабе комплексного решения нет, вопрос выносится на ГЗК.'},
+  {id:'1.1', n:'1.1', ph:1, t:'Положительное решение', who:['gov','dgp'],
+   txt:'Штаб или ГЗК одобряет проект решения о КРТ.'},
+  {id:'2', n:'2', ph:1, t:'Публикация проекта решения', who:['dgp'],
+   txt:'Проект постановления размещается на сайте krt.mos.ru для ознакомления правообладателей.',
+   own:'Первый публичный сигнал. На krt.mos.ru можно проверить, входит ли участок в границы КРТ.'},
+  {id:'3', n:'3', ph:1, t:'Предложение заключить договор о КРТ', who:['dgp','owner'], term:'45 дней', law:'ГрК РФ, ст. 66 ч. 8',
+   txt:'ДГП выявляет правообладателей земельных участков и ОКС в границах КРТ и направляет им предложение заключить договор о КРТ. Согласие должны дать все правообладатели.',
+   own:'От ответов зависит маршрут: если договор подпишут все правообладатели, торгов не будет (шаг 6.1).'},
+  {id:'4', n:'4', ph:1, t:'Итоговое решение о КРТ', who:['gov'],
+   txt:'Правительство Москвы принимает постановление о реализации КРТ.'},
+  {id:'5', n:'5', ph:2, t:'Проект планировки территории', who:['dgp','mcn'],
+   txt:'Разрабатывается и одобряется ППТ. Параллельно МЦН проводит предварительную оценку объектов.'},
+  {id:'6.1', n:'6.1', ph:2, lane:'B', end:true, t:'Договор со всеми правообладателями', who:['dgp','owner'], badge:'без торгов', term:'60 дней на подписание', law:'ГрК РФ, ст. 66 ч. 9; ст. 70 ч. 10',
+   txt:'Если согласны все правообладатели, договор о КРТ заключается с ними без торгов. Если подписанный договор не вернётся в течение 60 дней с направления проекта, город вправе отказаться от него и выбрать торги, оператора КРТ или самостоятельную реализацию.'},
+  {id:'6.2', n:'6.2', ph:2, t:'Договор по итогам торгов', who:['dkp','dgp','gov','investor'], law:'ГрК РФ, ст. 69; ПП Москвы № 1019-ПП',
+   txt:'Если единогласного согласия нет, проводятся обязательные торги на право заключить договор о КРТ. Условия договора при комплексном рассмотрении выносятся на ГЗК. По решению Мэра в проект договора могут вноситься изменения на основании решения ГЗК.'},
+  {id:'6.2.1', n:'6.2.1', ph:2, t:'Аренда земельного участка', who:['dgi','investor'],
+   txt:'С победителем торгов заключается договор аренды земельного участка для реализации договора о КРТ.'},
+  {id:'6.2.2', n:'6.2.2', ph:2, t:'Ходатайство об изъятии', who:['investor','dgi'],
+   txt:'Инвестор обращается в ДГИ с ходатайством об изъятии на основании решения о реализации КРТ.'},
+  {id:'7', n:'7', ph:3, t:'Распоряжение об изъятии', who:['dgi'], law:'ЗК РФ, ст. 56.12 п. 2',
+   txt:'По ходатайству инвестора ДГИ выпускает распоряжение об изъятии.',
+   own:'С этой даты идут сроки. Посчитать их можно в калькуляторе ниже.'},
+  {id:'8', n:'8', ph:3, t:'Уведомление правообладателей', who:['mcn','dgi','owner'], term:'10 дней по регламенту', law:'ЗК РФ, ст. 56.12 п. 4; ст. 56.6 п. 10',
+   txt:'Правообладателю направляется письмо с уведомлением о вручении и копией решения об изъятии. В ЕГРН вносится запись об ограничении.',
+   own:'Ограничение видно в выписке из ЕГРН.'},
+  {id:'9', n:'9', ph:3, t:'Оценка и проект соглашения', who:['mcn','investor','owner'], law:'ЗК РФ, ст. 56.12 п. 6; ст. 56.10',
+   txt:'МЦН привлекает оценщика. Отчёт об оценке рыночной стоимости и убытков вместе с проектом соглашения направляется правообладателю. Соглашение должно содержать выкупную цену и размер убытков. Застройщик или оператор вправе провести собственную оценку по условиям договора о КРТ.',
+   own:'Проект считается полученным со дня вручения письма или его возврата отправителю.'},
+  {id:'10', n:'10', ph:3, t:'Рассмотрение проекта соглашения', who:['owner'], term:'90 дней по регламенту', law:'ЗК РФ, ст. 56.10 п. 9–10; ст. 56.12 п. 9',
+   txt:'Правообладатель вправе отказаться от подписания, направить мотивированные возражения по размеру компенсации и предложить свою оценку.',
+   own:'Главное окно для переговоров о сумме.'},
+  {id:'11.1', n:'11.1', ph:3, lane:'B', t:'Соглашение подписано', who:['owner','dgi','investor'],
+   txt:'Стороны подписывают соглашение об изъятии.',
+   own:'Изъятие завершается без суда, на согласованных условиях.'},
+  {id:'11.2', n:'11.2', ph:3, t:'Иск о принудительном изъятии', who:['dgi'], term:'120 дней по регламенту', law:'ЗК РФ, ст. 56.12 п. 9, 13',
+   txt:'Если соглашение не подписано в срок, ДГИ обращается в суд с иском об изъятии и прекращении прав.',
+   own:'Решение суда об изъятии можно обжаловать только в части размера возмещения (ст. 56.12 п. 13).'},
+  {id:'12', n:'12', ph:3, t:'Регистрация прекращения прав', who:['dgi','investor','rr'], term:'до или одновременно с изъятием', law:'ЗК РФ, ст. 56.11 п. 3',
+   txt:'ДГИ или инвестор подают в Росреестр заявление о прекращении прав на земельный участок и ОКС. Права прекращаются с момента государственной регистрации.'},
+  {id:'12.1', n:'12.1', ph:3, end:true, t:'Выплата возмещения', who:['investor','dgi','owner'], term:'7 дней после решения суда', law:'ЗК РФ, ст. 56.11 п. 2; ст. 56.12 п. 11',
+   txt:'Возмещение перечисляет сторона договора о КРТ или орган, принявший решение об изъятии: на банковский счёт правообладателя или на депозит нотариуса.'}
+];
+const DIFF_BY = Object.fromEntries(DIFF.map(d=>[d.id,d]));
+const E = [
+  ['0','pre',1],['pre','1',1],['1','1.1',1],['1.1','2',1],['2','3',1],['3','4',1],
+  ['4','5','t'],
+  ['5','6.2',2],['5','6.1',2,'start'],['6.2','6.2.1',2],['6.2.1','6.2.2',2],
+  ['6.2.2','7','t'],
+  ['7','8',3],['8','9',3],['9','10',3],['10','11.2',3],['10','11.1',3,'start'],['11.1','12',3,'end'],['11.2','12',3],['12','12.1',3]
+];
+const BASE = ['0','pre','1','1.1','2','3','4','5'];
+const TAIL = ['6.2','6.2.1','6.2.2','7','8','9','10'];
+const ROUTES = {
+  agree: BASE.concat(TAIL,['11.1','12','12.1']),
+  court: BASE.concat(TAIL,['11.2','12','12.1']),
+  all:   BASE.concat(['6.1'])
+};
+const byId = Object.fromEntries(S.map(s=>[s.id,s]));
+const $ = s=>document.querySelector(s);
+const mapEl=$('#map'), wrapEl=$('#map-wrap'), rails=$('#rails'), trainLayer=$('#train-layer'), train=$('#train'), detail=$('#detail');
+const narrow = ()=>window.matchMedia('(max-width:899px)').matches;
+const reduce = ()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let selected='7', role=null, routeKey='agree', playToken=0, playing=false;
+const rows={}, dots={};
+
+/* --- Схема --- */
+function render(){
+  let html='', ph=0;
+  for(const s of S){
+    if(s.ph!==ph){ph=s.ph; html+=`<li class="phase-h" style="--c:${PH[ph].c}" aria-hidden="true"><span>Линия ${ph} · ${PH[ph].name}</span></li>`;}
+    const tags = s.who.map(k=>`<span class="tag">${ROLE[k].s}</span>`).join('')
+      + (s.term?`<span class="tag term">${s.term}</span>`:'')
+      + (s.badge?`<span class="tag term">${s.badge}</span>`:'')
+      + (DIFF_BY[s.id]?`<span class="tag flag">расходится с законом</span>`:'');
+    html+=`<li class="st${s.end?' end':''}" data-id="${s.id}" style="--c:${PH[s.ph].c}">
+      <button class="st-btn" type="button" aria-pressed="false" aria-controls="detail">
+        <span class="track"><span class="dot" style="--lane:var(--lane${s.lane||'A'})"></span></span>
+        <span class="st-body"><span class="st-top"><span class="st-num">${s.n}</span><span class="st-title">${s.t}</span></span><span class="st-meta">${tags}</span></span>
+      </button></li>`;
+  }
+  mapEl.innerHTML=html;
+  mapEl.querySelectorAll('.st').forEach(li=>{
+    const id=li.dataset.id; rows[id]=li; dots[id]=li.querySelector('.dot');
+    li.querySelector('button').addEventListener('click',()=>{stop(); select(id,{open:true});});
+  });
+  $('#diff').innerHTML=DIFF.map(d=>`<button class="diff-row" type="button" data-go="${d.id}">
+      <div class="diff-n">${byId[d.id].n}</div>
+      <div class="diff-reg"><div class="diff-k">В регламенте</div><b style="color:var(--fg)">${byId[d.id].t}.</b> ${d.reg}</div>
+      <div class="diff-law"><div class="diff-k">По закону</div>${d.law}</div>
+      <div class="diff-ref"><div class="diff-k">Норма</div>${d.ref}</div></button>`).join('');
+  $('#diff').addEventListener('click',e=>{
+    const b=e.target.closest('[data-go]'); if(!b) return;
+    stop(); select(b.dataset.go,{open:true});
+    rows[b.dataset.go].scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'});
+  });
+  $('#ok-list').innerHTML=OK.map(t=>`<span>${t}</span>`).join('');
+  $('#gloss').innerHTML=GLOSS.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+  $('#src').innerHTML=SRC.map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join('');
+}
+
+const paths={};
+function pt(id,r){const d=dots[id].getBoundingClientRect(); return {x:d.left+d.width/2-r.left, y:d.top+d.height/2-r.top};}
+function edgeD(a,b,mode){
+  if(Math.abs(a.x-b.x)<1) return `M${a.x} ${a.y} V${b.y}`;
+  const k=Math.min(44,(b.y-a.y)*0.8);
+  if(mode==='end'){const y0=b.y-k; return `M${a.x} ${a.y} V${y0} C${a.x} ${y0+k*.55} ${b.x} ${b.y-k*.55} ${b.x} ${b.y}`;}
+  const y1=a.y+k; return `M${a.x} ${a.y} C${a.x} ${a.y+k*.55} ${b.x} ${y1-k*.55} ${b.x} ${y1} V${b.y}`;
+}
+function drawRails(){
+  const r=wrapEl.getBoundingClientRect(), w=Math.round(r.width), h=Math.round(r.height);
+  [rails,trainLayer].forEach(svg=>{svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('viewBox',`0 0 ${w} ${h}`);});
+  const P={}; S.forEach(s=>P[s.id]=pt(s.id,r));
+  rails.innerHTML=E.map(([a,b,c,m])=>{
+    const cls=c==='t'?' class="t"':'', stroke=c==='t'?'':` stroke="${PH[c].c}"`;
+    return `<path data-k="${a}>${b}"${cls}${stroke} d="${edgeD(P[a],P[b],m)}"/>`;
+  }).join('');
+  rails.querySelectorAll('path').forEach(p=>paths[p.dataset.k]=p);
+  if(!playing){const p=P[selected]; train.setAttribute('transform',`translate(${p.x} ${p.y})`);}
+}
+
+/* --- Карточка станции --- */
+const ids=S.map(s=>s.id);
+function select(id,opts={}){
+  selected=id;
+  for(const k in rows){const on=k===id; rows[k].classList.toggle('sel',on); rows[k].querySelector('button').setAttribute('aria-pressed',on);}
+  const s=byId[id], P=PH[s.ph], i=ids.indexOf(id), d=DIFF_BY[id];
+  detail.style.setProperty('--c',P.c);
+  const who=s.who.map(k=>`<span>${ROLE[k].s}${ROLE[k].f?' · '+ROLE[k].f:''}</span>`).join('');
+  detail.innerHTML=`<button class="ghost sheet-close" type="button" data-close>Закрыть</button>
+    <div class="d-line"><i></i>Линия ${s.ph} · ${P.name}</div>
+    <div class="d-num">${s.n}</div>
+    <h2>${s.t}</h2>
+    <p>${s.txt}</p>
+    <dl class="facts"><dt>Участники</dt><dd>${who}</dd>${s.term?`<dt>Срок</dt><dd>${s.term}</dd>`:''}${s.law?`<dt>Основание</dt><dd>${s.law}</dd>`:''}</dl>
+    ${s.own?`<div class="note owner"><b>Для правообладателя</b>${s.own}</div>`:''}
+    ${d?`<div class="note flag"><b>Расходится с законом</b><dl><dt>Регламент</dt><dd>${d.reg}</dd><dt>Закон</dt><dd>${d.law} <span style="white-space:nowrap">(${d.ref})</span></dd></dl></div>`:''}
+    <div class="d-nav"><button class="ghost" type="button" data-nav="-1"${i===0?' disabled':''}>← Назад</button><button class="ghost" type="button" data-nav="1"${i===ids.length-1?' disabled':''}>Дальше →</button></div>`;
+  if(opts.open && narrow()){detail.classList.add('open'); document.body.classList.add('sheet-open');}
+  if(opts.scroll){rows[id].scrollIntoView({block:'nearest',behavior:reduce()?'auto':'smooth'});}
+}
+detail.addEventListener('click',e=>{
+  const n=e.target.closest('[data-nav]'), c=e.target.closest('[data-close]');
+  if(n){stop(); const j=ids.indexOf(selected)+Number(n.dataset.nav); if(ids[j]) select(ids[j],{open:true,scroll:true});}
+  if(c){detail.classList.remove('open'); document.body.classList.remove('sheet-open');}
+});
+
+/* --- Роли --- */
+function plural(n,a,b,c){const m10=n%10,m100=n%100; return m10===1&&m100!==11?a:(m10>=2&&m10<=4&&(m100<10||m100>=20)?b:c);}
+function renderRoles(){
+  const el=$('#roles');
+  el.innerHTML=`<button class="chip" type="button" data-role="" aria-pressed="true">Все</button>`+
+    Object.entries(ROLE).map(([k,v])=>`<button class="chip" type="button" data-role="${k}" aria-pressed="false">${v.s}</button>`).join('');
+  el.addEventListener('click',e=>{
+    const b=e.target.closest('[data-role]'); if(!b) return;
+    role=b.dataset.role||null;
+    el.querySelectorAll('[data-role]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    let n=0;
+    S.forEach(s=>{const on=!role||s.who.includes(role); if(role&&on) n++; rows[s.id].classList.toggle('dim',!on);});
+    rails.classList.toggle('dim',!!role);
+    $('#role-note').textContent = role ? `${ROLE[role].s}: ${n} ${plural(n,'шаг','шага','шагов')} из ${S.length}` : '';
+  });
+}
+
+/* --- Поезд --- */
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function ride(a,b,token){
+  return new Promise(res=>{
+    const p=paths[`${a}>${b}`];
+    if(!p||reduce()){res();return;}
+    const L=p.getTotalLength(), dur=Math.max(380,Math.min(900,L*5)), t0=performance.now();
+    const step=now=>{
+      if(token!==playToken){res();return;}
+      let t=Math.min(1,(now-t0)/dur); t=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      const q=p.getPointAtLength(L*t); train.setAttribute('transform',`translate(${q.x} ${q.y})`);
+      t<1?requestAnimationFrame(step):res();
+    };
+    requestAnimationFrame(step);
+  });
+}
+function setPlaying(on){
+  playing=on;
+  const b=$('#play'); b.querySelector('span').textContent=on?'Остановить':'Пройти маршрут';
+  b.querySelector('svg').innerHTML=on?'<path d="M2 2h8v8H2z"/>':'<path d="M2 1l9 5-9 5z"/>';
+  train.setAttribute('opacity',on?'1':'0');
+}
+function stop(){ if(playing){playToken++; setPlaying(false);} }
+async function play(){
+  const token=++playToken, route=ROUTES[routeKey];
+  setPlaying(true); drawRails();
+  const r=wrapEl.getBoundingClientRect(), p0=pt(route[0],r);
+  train.setAttribute('transform',`translate(${p0.x} ${p0.y})`);
+  select(route[0],{open:true,scroll:true});
+  await wait(600);
+  for(let i=1;i<route.length;i++){
+    if(token!==playToken) return;
+    await ride(route[i-1],route[i],token);
+    if(token!==playToken) return;
+    select(route[i],{open:true,scroll:true});
+    await wait(reduce()?1200:700);
+  }
+  if(token===playToken){await wait(900); if(token===playToken) setPlaying(false);}
+}
+$('#play').addEventListener('click',()=>playing?stop():play());
+$('#routes').addEventListener('click',e=>{
+  const b=e.target.closest('[data-route]'); if(!b) return;
+  routeKey=b.dataset.route;
+  document.querySelectorAll('[data-route]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  stop(); play();
+});
+
+/* --- Калькулятор --- */
+const DAY=864e5;
+const day0=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const add=(d,n)=>{const x=new Date(d); x.setDate(x.getDate()+n); return x;};
+const addWork=(d,n)=>{const x=new Date(d); while(n>0){x.setDate(x.getDate()+1); const w=x.getDay(); if(w!==0&&w!==6) n--;} return x;};
+const addMonth=d=>{const x=new Date(d.getFullYear(),d.getMonth()+1,1), last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate(); x.setDate(Math.min(d.getDate(),last)); return x;};
+const diff=(a,b)=>Math.round((day0(b)-day0(a))/DAY);
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const parse=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(v||''); return m?new Date(+m[1],+m[2]-1,+m[3]):null;};
+const fD=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+const fW=new Intl.DateTimeFormat('ru-RU',{weekday:'long'});
+const fmt=d=>fD.format(d).replace(' г.','');
+const dn=n=>`${n} ${plural(n,'день','дня','дней')}`;
+const today=day0(new Date());
+const in1=$('#d1'), in2=$('#d2');
+in1.value=iso(add(today,-75)); in2.value=iso(add(today,-40));
+let touched=false;
+
+function calc(){
+  const d1=parse(in1.value), d2=parse(in2.value), st=$('#status'), ms=$('#ms'), tl=$('#tl'), tw=$('#tl-wrap');
+  $('#sample').hidden=touched;
+  tw.querySelectorAll('.mk').forEach(x=>x.remove());
+  const fail=t=>{st.style.setProperty('--c','var(--warn)'); st.innerHTML=`<div class="k">Сейчас</div><div class="v err">${t}</div>`; ms.innerHTML=''; tl.innerHTML='';};
+  if(!d1||!d2) return fail('Укажите обе даты.');
+  if(d2<d1) return fail('Проект соглашения не может прийти раньше распоряжения. Проверьте даты.');
+  const w7=addWork(d1,7), n10=add(d1,10), m1=addMonth(d2), r90=add(d2,90), c120=add(d2,120);
+  let v, sub='', c='var(--grey)';
+  if(today<d1){v=`Распоряжение ещё не издано. До него ${dn(diff(today,d1))}.`;}
+  else if(today<=w7){c='var(--l2)'; v=`Идёт срок уведомления. По ЗК решение нужно опубликовать и направить до ${fmt(w7)}.`; sub=`По регламенту — до ${fmt(n10)}.`;}
+  else if(today<d2){v='Идёт оценка. Проект соглашения ещё не вручён.';}
+  else if(today<=r90){const left=diff(today,r90); c='var(--l3)'; v=`Идёт срок рассмотрения по регламенту: ${plural(left,'остался','осталось','осталось')} ${dn(left)}, до ${fmt(r90)}.`;
+    sub = today>=m1 ? `По ЗК (ст. 56.12 п. 9) иск уже возможен: месяц после вручения проекта истёк ${fmt(m1)}.` : `По ЗК (ст. 56.12 п. 9) иск возможен уже с ${fmt(m1)}.`;}
+  else if(today<=c120){c='var(--l1)'; v=`Срок рассмотрения истёк. По регламенту иск подаётся до ${fmt(c120)}.`;}
+  else {v=`Все сроки по регламенту прошли ${dn(diff(c120,today))} назад.`;}
+  st.style.setProperty('--c',c);
+  st.innerHTML=`<div class="k">Сейчас · ${fmt(today)}</div><div class="v">${v}${sub?`<small>${sub}</small>`:''}</div>`;
+
+  const segs=[[d1,w7<d2?w7:d2,'var(--l2)'],[w7<d2?w7:d2,d2,'var(--grey)'],[d2,r90,'var(--l3)'],[r90,c120,'var(--l1)']];
+  tl.innerHTML=segs.map(([a,b,col])=>{const w=Math.max(0,diff(a,b)); return w?`<i style="flex:${w} 1 0;background:${col}"></i>`:'';}).join('');
+  const total=diff(d1,c120), mark=(d,cls,label)=>{const p=diff(d1,d); if(p<0||p>total) return; const m=document.createElement('div'); m.className='mk '+cls; m.style.left=`${p/total*100}%`; m.innerHTML=`<span>${label}</span>`; tw.appendChild(m);};
+  mark(today,'today','сегодня');
+  mark(m1,'law','иск по ЗК');
+
+  const items=[
+    [d1,'Распоряжение об изъятии','Шаг 7. Отсюда идёт срок уведомления.'],
+    [w7,'Уведомление по ЗК: 7 рабочих дней',`Шаг 8. Публикация, сайт, щит на территории и копия решения правообладателю (ст. 56.12 п. 4). По регламенту — 10 дней, до ${fmt(n10)}.`],
+    [d2,'Вручён проект соглашения',`Шаг 9. Вместе с отчётом об оценке. От распоряжения прошло ${dn(diff(d1,d2))}.`],
+    [m1,'Иск возможен по ЗК','Месяц после ознакомления с проектом, если соглашение не заключено (ст. 56.12 п. 9). В регламенте этой даты нет.','lawrow'],
+    [r90,'Последний день рассмотрения по регламенту','Шаг 10. Подписать соглашение или направить мотивированные возражения со своей оценкой.'],
+    [c120,'Конец окна для иска по регламенту','Шаг 11.2. Суммарного срока 120 дней в законе нет.']
+  ];
+  ms.innerHTML=items.map(([d,t,s,cls])=>`<li class="${[d<today?'past':'',cls||''].join(' ').trim()}"><div class="ms-date">${fmt(d)}<small>${fW.format(d)}</small></div><div class="ms-t"><b>${t}</b><small>${s}</small></div></li>`).join('');
+}
+[in1,in2].forEach(i=>i.addEventListener('input',()=>{touched=true; calc();}));
+
+/* --- Старт --- */
+render(); renderRoles(); select(selected); calc();
+drawRails();
+new ResizeObserver(()=>{ if(!playing) drawRails(); }).observe(mapEl);
+window.addEventListener('resize',()=>{ if(!playing) drawRails(); });
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawRails);
+})();
+</script>
+
+</body>
+</html>
