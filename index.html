@@ -157,12 +157,12 @@ ol.map{list-style:none;margin:0;padding:0;position:relative;z-index:1}
 .facts dd{margin:0}
 .facts dd span{display:block}
 .note{border-radius:8px;padding:12px 14px;font-size:13.5px;margin-top:12px}
-.note b{display:block;font:700 11px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.note > b{display:block;font:700 11px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
 .note.owner{background:var(--chip)}
 .note.owner b{color:var(--head)}
 .note.flag{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
 .note.flag b{color:var(--head)}
-.note.flag dd.was{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--grey)}
+.note.flag dd.was{color:var(--muted)}
 .note.flag dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:0}
 .note.flag dt{font-weight:700}
 .note.flag dd{margin:0}
@@ -179,27 +179,6 @@ ol.map{list-style:none;margin:0;padding:0;position:relative;z-index:1}
   .detail.open{transform:none;visibility:visible}
   .sheet-close{display:inline-block}
   .d-num{font-size:38px;margin-top:4px}
-}
-
-/* Сверка с законом */
-.diff{display:grid;gap:10px}
-.diff-row{appearance:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border-radius:8px;padding:16px 18px;display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) minmax(0,170px);gap:8px 20px;align-items:start;transition:box-shadow .15s}
-.diff-row:hover{box-shadow:inset 0 0 0 2px var(--blue)}
-.diff-head{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) minmax(0,170px);gap:20px;padding:0 18px;font:700 11px/1.3 var(--f);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.diff-n{font:900 22px/1 var(--f);color:var(--l3)}
-.diff-reg{color:var(--muted)}
-.diff-reg s{text-decoration-color:var(--grey)}
-.diff-law b{color:var(--fg)}
-.diff-ref{font:600 12.5px/1.4 var(--f);color:var(--head)}
-.diff-k{display:none;font:700 10.5px/1.3 var(--f);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:2px}
-.ok-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.ok-list span{font:600 12.5px/1.4 var(--f);padding:6px 10px;border-radius:8px;background:var(--surface);color:var(--fg)}
-.ok-list span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:8px;vertical-align:1px}
-@media (max-width:760px){
-  .diff-head{display:none}
-  .diff-row{grid-template-columns:44px minmax(0,1fr)}
-  .diff-row > div:not(.diff-n){grid-column:2}
-  .diff-k{display:block}
 }
 
 /* Калькулятор */
@@ -263,7 +242,6 @@ ol.ms li.lawrow{background:var(--warn-bg)}
 </a>
     <nav aria-label="Разделы">
       <a href="#scheme">Схема</a>
-      <a href="#law">Сверка с законом</a>
       <a href="#calc">Калькулятор</a>
     </nav>
   </div>
@@ -274,7 +252,7 @@ ol.ms li.lawrow{background:var(--warn-bg)}
     <div class="ruler" aria-hidden="true"></div>
     <div class="eyebrow">Москва · комплексное развитие территорий</div>
     <h1>Изъятие недвижимости в&nbsp;рамках КРТ</h1>
-    <div class="band"><p>Весь путь от первого обращения до выплаты возмещения: 20 шагов, 8 участников, три этапа. Порядок и сроки приведены по Земельному и Градостроительному кодексам и проходят юридическую проверку.</p></div>
+    <div class="band"><p>Весь путь от первого обращения до выплаты возмещения и регистрации: 20 шагов, 8 участников, три этапа. Порядок и сроки приведены по Земельному и Градостроительному кодексам и проходят юридическую проверку.</p></div>
     <div class="legend" aria-label="Линии схемы">
       <span style="--c:#0B1750"><i style="box-shadow:0 0 0 1px rgba(255,255,255,.6)"></i>Линия 1 · Решение о КРТ</span>
       <span style="--c:#9CBBF5"><i></i>Линия 2 · Договор о КРТ</span>
@@ -329,23 +307,10 @@ ol.ms li.lawrow{background:var(--warn-bg)}
     </div>
   </section>
 
-  <section id="law">
-    <div class="wrap">
-      <div class="sh">
-        <div class="idx">02</div>
-        <h2>Что исправлено<span>пять отличий от регламента 2.0</span></h2>
-        <p>Схема выше построена по Земельному и Градостроительному кодексам. Здесь видно, что пришлось изменить относительно регламента. Нажмите на строку, чтобы открыть шаг на схеме.</p>
-      </div>
-      <div class="diff-head" aria-hidden="true"><span>Шаг</span><span>Было в регламенте</span><span>Стало по закону</span><span>Норма</span></div>
-      <div class="diff" id="diff"></div>
-      <div class="ok-list" id="ok-list"></div>
-    </div>
-  </section>
-
   <section id="calc">
     <div class="wrap">
       <div class="sh">
-        <div class="idx">03</div>
+        <div class="idx">02</div>
         <h2>Калькулятор сроков<span>для правообладателя</span></h2>
         <p>Введите две даты, и калькулятор покажет сроки по закону. Рабочие дни считаются без учёта праздников.</p>
       </div>
@@ -438,12 +403,6 @@ const DIFF = [
    law:'Иск, если соглашение <b>не заключено в течение месяца</b> после ознакомления с проектом. Подать его нужно, пока действует решение об изъятии: три года.', ref:'ЗК РФ, ст. 56.12 п. 9; ст. 56.6 п. 13'},
   {id:'12', reg:'Сначала регистрация прекращения прав, потом выплата.',
    law:'<b>Сначала выплата</b>, после решения суда — в течение 7 дней. Права прекращаются только после неё.', ref:'ЗК РФ, ст. 56.11 п. 2; ст. 56.12 п. 11'}
-];
-const OK = [
-  'Торги обязательны, если договор подписали не все правообладатели — ГрК, ст. 69 ч. 1',
-  'Договор со всеми правообладателями заключается без торгов — ГрК, ст. 70 ч. 10',
-  'Предложение правообладателям направляется до итогового решения — ГрК, ст. 66 ч. 8',
-  'ГЗК создана ПП Москвы № 1019-ПП'
 ];
 const S = [
   {id:'0', n:'0', ph:1, end:true, t:'Обращение', who:['dgp','investor','owner'],
@@ -541,17 +500,6 @@ function render(){
     const id=li.dataset.id; rows[id]=li; dots[id]=li.querySelector('.dot');
     li.querySelector('button').addEventListener('click',()=>{stop(); select(id,{open:true});});
   });
-  $('#diff').innerHTML=DIFF.map(d=>`<button class="diff-row" type="button" data-go="${d.id}">
-      <div class="diff-n">${byId[d.id].n}</div>
-      <div class="diff-reg"><div class="diff-k">Было в регламенте</div><b style="color:var(--fg)">${byId[d.id].t}.</b> <s>${d.reg}</s></div>
-      <div class="diff-law"><div class="diff-k">Стало по закону</div>${d.law}</div>
-      <div class="diff-ref"><div class="diff-k">Норма</div>${d.ref}</div></button>`).join('');
-  $('#diff').addEventListener('click',e=>{
-    const b=e.target.closest('[data-go]'); if(!b) return;
-    stop(); select(b.dataset.go,{open:true});
-    rows[b.dataset.go].scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'});
-  });
-  $('#ok-list').innerHTML=OK.map(t=>`<span>${t}</span>`).join('');
   $('#gloss').innerHTML=GLOSS.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
   $('#src').innerHTML=SRC.map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join('');
 }
@@ -591,7 +539,7 @@ function select(id,opts={}){
     <p>${s.txt}</p>
     <dl class="facts"><dt>Участники</dt><dd>${who}</dd>${s.term?`<dt>Срок</dt><dd>${s.term}</dd>`:''}${s.law?`<dt>Основание</dt><dd>${s.law}</dd>`:''}</dl>
     ${s.own?`<div class="note owner"><b>Для правообладателя</b>${s.own}</div>`:''}
-    ${d?`<div class="note flag"><b>Исправлено по закону</b><dl><dt>Было</dt><dd class="was">${d.reg}</dd><dt>Стало</dt><dd>${d.law} <span style="white-space:nowrap">(${d.ref})</span></dd></dl></div>`:''}
+    ${d?`<div class="note flag"><b>Исправлено по закону</b><dl><dt>В регламенте</dt><dd class="was">${d.reg}</dd><dt>По закону</dt><dd>${d.law} <span style="white-space:nowrap">(${d.ref})</span></dd></dl></div>`:''}
     <div class="d-nav"><button class="ghost" type="button" data-nav="-1"${i===0?' disabled':''}>← Назад</button><button class="ghost" type="button" data-nav="1"${i===ids.length-1?' disabled':''}>Дальше →</button></div>`;
   if(opts.open && narrow()){detail.classList.add('open'); document.body.classList.add('sheet-open');}
   if(opts.scroll){rows[id].scrollIntoView({block:'nearest',behavior:reduce()?'auto':'smooth'});}
